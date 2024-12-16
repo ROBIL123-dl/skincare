@@ -1,0 +1,66 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid">
+        <!-- Left side -->
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            Lushaura
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- <li class="nav-item">
+                    <b><a class="nav-link" href="">Vendors</a></b>
+                </li>
+                <li class="nav-item">
+                    <b><a class="nav-link" href="">Customers</a></b>
+                </li> -->
+            </ul>
+
+            <!-- Right side -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link icon-btn " href="" title="Dashboard">Dashboard</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link icon-btn" href="{% url 'vendor:create_product' %}" title="Add Product" data-bs-toggle="tooltip" data-bs-placement="bottom" style="color:white;">
+                        <i class="bi bi-plus-square"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link icon-btn" href="{% url 'vendor:subcategory' %}" title="Add Category">
+                      <i class="bi bi-folder-plus"></i>
+                    </a>
+                  </li>
+                <li class="nav-item">
+                    <a class="nav-link icon-btn" href="{% url 'vendor:product_list' %}" title="Product List" data-bs-toggle="tooltip" data-bs-placement="bottom" style="color:white;">
+                        <i class="bi bi-card-list"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link icon-btn" href="{% url 'vendor:order_list' %}" title="Orders" data-bs-toggle="tooltip" data-bs-placement="bottom" style="color:white;">
+                        <i class="bi bi-cart-check"></i>
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vendor:vendorprofile' %}">
+                        <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
+                        Profile
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>

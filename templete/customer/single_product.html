@@ -1,0 +1,135 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block link_block %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" href="{% static 'customer/single.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+{% endblock %}
+
+{% block body_content %}
+{% include 'customer/custmor_nav.html' %}
+
+<div class="container">
+  <div class="product-container">
+    <div class="product-images">
+      <img src="{{product.image_1.url}}" alt="Product Image" class="main-image">
+      <div class="thumbnail-container">
+        <img src="{{product.image_1.url}}" alt="Thumbnail 1" class="thumbnail">
+        <img src="{{product.image_2.url}}" alt="Thumbnail 2" class="thumbnail">
+        <img src="{{product.image_3.url}}" alt="Thumbnail 3" class="thumbnail">
+        <img src="{{product.image_1.url}}" alt="Thumbnail 4" class="thumbnail">
+      </div>
+    </div>
+    <div class="product-details mt-5">
+      <h1 class="product-title">{{product.product_name}}</h1>
+      <div class="product-rating">
+        <span class="stars">★★★★★</span>
+        <span class="review-count">(128 reviews)</span>
+      </div>
+      <p class="product-price">{{product.price}}</p>
+      {% if product.quantity > 0%}
+      <span class="text-success">In Stock</span>
+      {% else %}
+      <span class="text-danger">Out of Stock</span>
+      {% endif %}
+      <p class="product-description">{{product.description}}</p>
+      <div class="product-actions">
+        <div class="quantity-selector">
+          {% if product.quantity > 5 %}
+          <form action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <a class="btn btn-warning text-white" id="decrease" onclick="decreaseQuantity()">-</a>
+          <input id="quantity" name="value" value="1" readonly style="width:25px; border:0px">
+          <a id="increase" class="btn btn-warning text-white" onclick="increaseQuantity()">+</a>
+      </div>
+        <button type="submit" class="btn btn-secondary">Add to Cart</button>
+        {% else %}
+        {% if product.quantity > 0 %}
+        <form action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+        <input id="quantity" name="value" value="1" readonly style="width:25px; border:0px">
+        <span class="text-danger mx-2">Product have minimum quantity,You can only buy single product </span>
+        <button type="submit" class="btn btn-secondary">Add to Cart</button>
+     </form>
+     {% else %}
+     <span class="text-danger mx-2">Product is not available</span>
+     {% endif %}
+    {% endif %}
+
+        <a class="btn btn-success">Add to Wishlist</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Products -->
+<div class="container my-5">
+  <h3 class="mb-4 text-center">Related Products</h3>
+  <div class="row g-4">
+    {% for relate in category %}
+    <div class="col-6 col-md-3">
+      <div class="card">
+        <a href="{% url 'customer:single_product' relate.id %}">
+          <img src="{{relate.image_1.url}}" class="card-img-top" alt="Product Image">
+        </a>
+        <div class="card-body text-center">
+          <h5 class="card-title">{{relate.product_name}}</h5>
+          <p class="card-text">{{relate.price}} Rs/</p>
+          <a href="{% url 'customer:single_product' relate.id %}" class="btn btn-sm btn-success">View product</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% include 'footer.html' %}
+
+<!-- JavaScript for Image Preview -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{msg}}",
+        className: "info",
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+      }).showToast();
+    </script>
+    {% endfor %}
+    {% endif %}
+    <!-- ----------- -->
+    <script>
+  // Select the main image and thumbnails
+  const mainImage = document.querySelector('.main-image');
+  const thumbnails = document.querySelectorAll('.thumbnail');
+
+  // Add click event listeners to each thumbnail
+  thumbnails.forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      const src = thumbnail.getAttribute('src'); // Get the clicked image src
+      mainImage.setAttribute('src', src); // Update the main image src
+    });
+  });
+ 
+
+let quantity = 1;
+
+function increaseQuantity() {
+    quantity++;
+    document.getElementById('quantity').value = quantity; // Update input value
+}
+
+function decreaseQuantity() {
+    if (quantity > 1) {
+        quantity--;
+        document.getElementById('quantity').value = quantity; // Update input value
+    }
+}
+
+</script>
+
+{% endblock %}

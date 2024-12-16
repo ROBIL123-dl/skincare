@@ -1,0 +1,116 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+{% block link_vblock %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+{% endblock %}
+
+{% block vbody_content %}
+{% include 'vendor/vendor_nav.html' %}
+<div class="container mt-4">
+    <h1 class="text-center">update Product</h1>
+</div>
+<div class="container my-5">
+    <form action="{% url 'vendor:product_update' product.id  %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-md-6">
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">Product Name</label>
+                    {{ form.product_name }}
+                    {{ form.product_name.errors }}
+                </div>
+                <!-- Product Subname -->
+                <div class="mb-3">
+                    <label for="product_subname" class="form-label">Product Subname</label>
+                    {{ form.product_subname }}
+                    {{ form.product_subname.errors }}
+                </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                </div>
+                <!-- Price -->
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    {{ form.price }}
+                    {{ form.price.errors }}
+                </div>
+                <!-- Primary Image -->
+                <div class="mb-3">
+                    <label for="image_1" class="form-label">Primary Image</label>
+                    {{ form.image_1 }}
+                    {{ form.image_1.errors }}
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-6">
+                <!-- Quantity -->
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    {{ form.quantity }}
+                    {{ form.quantity.errors }}
+                </div>
+                <!-- Brand Name -->
+                <div class="mb-3">
+                    <label for="brand_name" class="form-label">Brand Name</label>
+                    {{ form.brand_name }}
+                    {{ form.brand_name.errors }}
+                </div>
+                <!-- Product Size -->
+                <div class="mb-3">
+                    <label for="product_size" class="form-label">Product Size</label>
+                    {{ form.product_size }}
+                    {{ form.product_size.errors }}
+                </div>
+                <!-- Secondary Image -->
+                <div class="mb-3">
+                    <label for="image_2" class="form-label">Secondary Image</label>
+                    {{ form.image_2 }}
+                    {{ form.image_2.errors }}
+                </div>
+                <!-- Additional Image -->
+                <div class="mb-3">
+                    <label for="image_3" class="form-label">Additional Image</label>
+                    {{ form.image_3 }}
+                    {{ form.image_3.errors }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Full-Width Fields -->
+        <div class="mb-3">
+            <label for="category_id" class="form-label">Category</label>
+            {{ form.category }}
+            {{ form.category.errors }}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg w-100">Add Product</button>
+        </div>
+    </form>
+</div>
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

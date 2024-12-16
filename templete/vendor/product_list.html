@@ -1,0 +1,142 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+{% block link_vblock %}
+<style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .scroll-container {
+            max-height: 80vh; /* Limit height to enable scrolling */
+            overflow-y: auto;
+            width: 100%; /* Adjust width for full responsiveness */
+            margin: 0 auto; /* Center the container */
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background-color: #ffffff;
+            padding: 15px;
+        }
+        .product-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background-color: #e9ecef;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 100%; /* Let cards take up full width */
+        }
+        .product-card img {
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .product-details {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+        .btn-update {
+            background-color: #0a4322;
+            color: white;
+        }
+        .btn-delete {
+            background-color: #6c757d;
+            color: white;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+    
+
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+{% endblock %}
+
+{% block vbody_content %}
+{% include 'vendor/vendor_nav.html' %}
+<nav class="navbar seccond_nav" style=" background-color:rgb(249, 247, 247)">
+    <div class="container-fluid">
+      <a class="navbar-brand text-secondary">Product List</a>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+<div class="container">
+    <h1 class="text-center">Vendor products</h1>
+</div>
+<div class="container mt-4">
+    <div class="scroll-container">
+        <!-- Product Card -->
+         {% if products %}
+         {% for product in products %}
+        <div class="product-card">
+            <div class="d-flex">
+                <img src="{{product.image_1.url}}" alt="Product Image 1">
+                <img src="{{product.image_2.url}}" alt="Product Image 2" class="ms-2">
+                <img src="{{product.image_3.url}}" alt="Product Image 3" class="ms-2">
+            </div>
+            <div class="product-details ms-5">
+                <h4>{{product.product_name}}</h4>
+                <p class="mb-1"><label>Price:</label>{{product.price}}</p>
+                <p class="mb-1"><label>Total Quantity:</label>{{product.quantity}}</p>
+                <p class="mb-1"><label>Category:</label>{{product.subcategory_id.sub_name}}</p>
+                <p class="mb-1"><label>Brand:</label>{{product.brand_name}}</p>
+                <p>
+                    Availability:
+                    {% if product.quantity == 0 %} 
+                    <span class="text-danger">Not Available</span>
+                    {% else %} | 
+                    <span class="text-success">Available</span>
+                    {% endif %}
+                </p>
+                <p>
+                    status:
+                    {% if product.active == True%} 
+                    <span class="text-warning">Unblocked</span>
+                    {% else %} | 
+                    <span class="text-danger">blocked</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'vendor:product_update' product.id %}" class="btn btn-update btn-sm m-2">Update</a>
+                {% if product.active == True%}
+                <a href="{% url 'vendor:block_product' product.id 'block' %}"  class="btn btn-delete btn-sm m-2">block</a>
+                {% else %}
+                <a href="{% url 'vendor:block_product' product.id 'unblocked' %}"  class="btn btn-delete btn-sm m-2">unblocked</a>
+               {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-secondary" role="alert">
+            No product found
+          </div>
+        <!-- Duplicate Product Card -->
+       {% endif %}
+    </div>
+</div>
+
+
+
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

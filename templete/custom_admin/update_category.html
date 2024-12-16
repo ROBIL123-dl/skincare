@@ -1,0 +1,46 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% block link_Ablock %}
+<link rel="stylesheet" href="{% static 'admin/nav.css' %}">
+<link rel="stylesheet" href="{% static 'admin/custmor.css' %}">
+{% endblock %}
+
+{% block Abody_content %}
+{% include 'custom_admin\nav.html' %}
+
+<div class="container mt-4">
+    <h1>Welcome to category update</h1>
+    <p>This is the category update</p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Edit Category</h5>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'update_category' category.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="categoryName" class="form-label">Category Name</label>
+              <input type="text" name="name" class="form-control" id="categoryName" value="{{ category.name }}" placeholder="Enter category name" required>
+            </div>
+            <div class="mb-3">
+              <label for="categoryDesc" class="form-label">Description</label>
+              <textarea name="desc" class="form-control" id="categoryDesc" rows="3" placeholder="Enter category description" required>{{ category.desc }}</textarea>
+            </div>
+            <div class="d-flex justify-content-between">
+             
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    {% endblock %}

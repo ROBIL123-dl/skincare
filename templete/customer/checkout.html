@@ -1,0 +1,171 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block link_block %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<style>
+    .form-check-input {
+        accent-color: #567253 !important;
+    }
+</style>
+{% endblock %}
+
+{% block body_content %}
+{% include 'customer/custmor_nav.html' %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-3" style="color:#567253;">Checkout</h2>
+
+            <!-- Scrollable Section -->
+            <div class="d-flex overflow-auto" style="gap: 15px; white-space: nowrap;">
+                {% for product in cart_products %}
+                <div class="card" style="width: 150px; flex-shrink: 0;">
+                    <img src="{{ product.product_id.image_1.url }}" class="card-img-top img-fluid" style="height: 100px; object-fit: cover;" alt="Product Image">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">{{product.product_price}}-Rs/</h6>
+                        <p class="card-text mb-0">Qty: {{ product.total_quantity }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Scroll Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+                <button id="scroll-left" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-chevron-left"></i> Scroll Left
+                </button>
+                <button id="scroll-right" class="btn btn-outline-primary btn-sm">
+                    Scroll Right <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <h4 class="mb-3" style="color:#567253;">Shipping Address</h4>
+            <div class="card mb-4">
+                <div class="card-body">
+                    {% if customer_current_address %}
+                    <p class="mb-1">{{ customer_current_address.full_name }}</p>
+                    <p class="mb-1">{{ customer_current_address.addres }}</p>
+                    <p class="mb-1">{{customer_current_address.pincode }}</p>
+                    <p class="mb-1">{{ customer_current_address.state }}</p>
+                    <p class="mb-1">{{customer_current_address.country }}</p>
+                    {% else %}
+                    <span class="text-danger mx-2">Please add current address</span>
+                    {% endif %}
+                    <a class="btn btn-outline-success mt-3" data-bs-toggle="modal" data-bs-target="#addressModal">Change Address</a>
+                </div>
+            </div>
+
+            <form action="{% url 'customer:place_order' cart_id status  %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                 <!-- Hidden field for product ID -->
+                 <input type="hidden" name="product_id" value="{{ cart_products.id}}">
+
+                <h4 class="mb-3" style="color:#567253;">Payment</h4>
+                <div class="my-3">
+                    <div class="form-check">
+                        <input id="paypal" name="paymentMethod" value="1" type="radio" class="form-check-input" checked required>
+                        <label class="form-check-label" for="paypal">PayPal</label>
+                    </div>
+                    <div class="form-check">
+                        <input id="stripe" name="paymentMethod" value="2" type="radio" class="form-check-input" required>
+                        <label class="form-check-label" for="stripe">Stripe</label>
+                    </div>
+                    <div class="form-check">
+                        <input id="cash" name="paymentMethod" value="3" type="radio" class="form-check-input" required>
+                        <label class="form-check-label" for="cash">Cash on Delivery</label>
+                    </div>
+                </div>
+        </div>
+
+        <div class="col-md-4 mt-5">
+           
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:#567253;">Order Summary</h5>
+                    <ul class="list-group list-group-flush mb-3">
+                        {% for product in cart_products %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>products({{product.total_quantity}}x)</span>
+                            <span>{{product.total_price}}-Rs/</span>
+                        </li>
+                        {% endfor %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Shipping</span>
+                            <span>50.00-Rs</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (Rs)</span>
+                            <strong>{{total_price}}-Rs/</strong>
+                        </li>
+                    </ul>
+                    <button type="submit" class="btn w-100 text-white" style="background-color:#567253;">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+
+<!-- Modal -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressModalLabel">Address List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for addres in address %}
+                <div class="list-group">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">{{ addres.addres }},{{ addres.state }},{{ addres.country }},{{ addres.pincode }}</h5>
+                            <p class="mb-1">{{ addres.full_name }}</p>
+                            <p class="mb-1">{{ addres.phone_number }}</p>
+                        </div>
+                        <a href="{% url 'customer:checkout_address' addres.id status cart_id  %}" type="button" class="btn btn-primary">Select</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Toastify Messages -->
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+
+<!-- Scroll Functionality -->
+<script>
+    const scrollContainer = document.querySelector('.overflow-auto');
+    document.getElementById('scroll-left').addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: -150, behavior: 'smooth' });
+    });
+    document.getElementById('scroll-right').addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: 150, behavior: 'smooth' });
+    });
+</script>
+
+{% endblock %}

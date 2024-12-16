@@ -1,0 +1,107 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+{% block link_Ablock %}
+<link rel="stylesheet" href="{% static 'admin/nav.css' %}">
+{% endblock %}
+
+{% block Abody_content %}
+{% include 'custom_admin/nav.html' %}
+ <!-- Navbar -->
+ <nav class="navbar" style="background-color:rgb(249, 247, 247)">
+    <div class="container-fluid">
+      <a class="navbar-brand"><b>Admin Panel</b></a>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="container mt-4">
+    <h1>Welcome to the category side</h1>
+    <p>This is the category creation side</p>
+  </div>
+  {% if messages %}
+  <div class="alert alert-success" role="alert">
+    {% for error in messages %}
+     <p class="text-danger">{{error}}</p>
+   {% endfor %}
+   </div>
+   {% endif %}
+
+  <div class="container mt-5">
+    <div class="row">
+       
+      <!-- Left Side: Scrollable List of Categories -->
+      <div class="col-md-6" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+        <h4>Categories</h4>
+        <ul class="list-group">
+        {% for category in categories %}
+          {% if category.delete == False %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{category.name}}</span>
+            <div>
+              <a href="{% url 'update_category' category.id %}" class="btn btn-warning btn-sm update-btn">Update</a>
+              <a href="{% url 'del_category' category.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+          </li>
+          {% endif %}
+        {% endfor %}
+          <!-- Add more categories here -->
+        </ul> 
+      </div>
+
+      <!-- Right Side: Create Category Form -->
+      <div class="col-md-6 mt-3">
+        <h4>Create Category</h4>
+        <form action="{% url 'category' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="mb-3">
+            <label for="categoryName" class="form-label">Category Name</label>
+            {{form.name}}
+            {{from.name.error}}
+          </div>
+          <div class="mb-3">
+            <label for="categoryDesc" class="form-label">Description</label>
+            {{form.desc}}
+            {{form.desc.error}}
+          </div>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Modal -->
+  <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="updateForm">
+            <div class="mb-3">
+              <label for="updateName" class="form-label">Category Name</label>
+              <input type="text" class="form-control" id="updateName">
+            </div>
+            <div class="mb-3">
+              <label for="updateDesc" class="form-label">Description</label>
+              <textarea class="form-control" id="updateDesc" rows="3"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="updateButton">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS (includes Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  
+
+
+{% endblock %}

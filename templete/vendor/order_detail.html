@@ -1,0 +1,110 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+{% block link_vblock %}
+
+
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+{% endblock %}
+
+{% block vbody_content %}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Order Detail</h3>
+            <div class="row">
+                <!-- Left side: Product and Customer Info -->
+                
+                <div class="col-md-6">
+                    <img src="{{detail.product.image_1.url}}" alt="Product Image" class="img-fluid rounded mb-3">
+                    <h3>{{detail.product.product_name}}</h3>
+                    <h6 class="mt-4">Customer Information</h6>
+                    <p><strong>Name:</strong>{{detail.customer.full_name}}</p>
+                    <p><strong>Address:</strong>{{detail.delivery_address}}</p>
+                    <p><strong>Pincode:</strong>{{detail.pincode}}</p>
+                    <p><strong>phone_no:</strong>{{detail.phone_number}}</p>
+            
+                </div>
+
+                <!-- Right side: Order Details and Status -->
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between mb-4">
+                        <div>
+                            <p><strong>Order Date:</strong>{{detail.created_at}}</p>
+                           
+                        </div>
+                        <div>
+                        {% if detail.order_status == "Pending" %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                     {% endif %}
+                     {% if detail.order_status == 'Delivered' %}
+                     <span class="badge bg-success">Delivered</span>
+                    {% endif %}
+               
+                    {% if detail.order_status == 'Shipping' %}
+                    <span class="badge bg-info">Shipped</span>
+                    {% endif %}
+                    {% if detail.order_status == 'Cancelled' %}
+                    <span class="badge bg-danger">Cancelled</span>
+                    {% endif %}
+                    {% if detail.order_status == 'Confirmed' %}
+                    <span class="badge bg-info">Confirmed</span>
+                    {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><strong>Quantity:</strong>{{detail.quantity}}</div>
+                                <div><strong>Actual Price:</strong>{{detail.product.price}}-Rs/</div>
+                                <div><strong>Total Price:</strong>{{detail.total_amount}}-Rs/</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <form action="{% url 'vendor:order_detail' detail.id %}" method="post">
+                            {% csrf_token %}
+                        <label for="statusUpdate" class="form-label"><strong>Update Status:</strong></label>
+                        <select class="form-select" name="status"  id="statusUpdate">
+                            <option selected>{{detail.order_status}}</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Shipping">Shipping</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <button  type="submit" class="btn btn-primary">update Satuts</button>
+
+                    <div class="text-end">
+                        <a  href="{% url 'vendor:order_list' %}"   class="btn btn-primary">Back to Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

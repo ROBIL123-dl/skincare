@@ -1,0 +1,54 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block link_block %}
+
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+{% endblock %}
+{% block body_content %}
+     {% include 'customer/custmor_nav.html' %}
+     <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card shadow">
+              <div class="card-header text-center bg-success text-white">
+                <h4>Login Form</h4>
+              </div>
+              <div class="card-body">
+                <form action="{% url 'customer:user_auth' user.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email">
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password">
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Login</button>
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+      {% if messages %}
+      {% for msg in messages %}
+      <script>
+          Toastify({
+              text: "{{msg}}",
+              className: "info",
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              }
+            }).showToast();
+      </script>
+      {% endfor %}
+      {% endif %}
+ {% endblock %}

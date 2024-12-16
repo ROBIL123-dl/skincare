@@ -1,0 +1,23 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+
+{% block link_Ablock %}
+<link rel="stylesheet" href="{% static 'admin/nav.css' %}">
+
+{% endblock %}
+
+{% block Abody_content %}
+{% include 'custom_admin\nav.html' %}
+
+{% include 'custom_admin\nav_search.html' %}
+
+<div class="container mt-4">
+    <h1>Welcome to the Admin Dashboard</h1>
+    <p>This is the main content area of your admin panel.</p>
+</div>
+
+{% endblock %}
+
+
+

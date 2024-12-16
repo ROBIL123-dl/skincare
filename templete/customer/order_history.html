@@ -1,0 +1,131 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block link_block %}
+<style>
+    .order-card {
+        transition: all 0.3s ease;
+    }
+    .order-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    .product-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+    .status-badge {
+        font-size: 0.9rem;
+    }
+    .cancel-btn {
+        transition: all 0.3s ease;
+    }
+    .cancel-btn:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .footer{
+        margin-bottom:0em;
+    }
+</style>
+
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+{% endblock %}
+
+{% block body_content %}
+{% include 'customer/custmor_nav.html' %}
+<nav class="navbar seccond_nav" style=" background-color:rgb(249, 247, 247)">
+    <div class="container-fluid">
+      <a class="navbar-brand text-secondary">Order history</a>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+<!-- Secondary Navbar -->
+
+<body class="bg-light">
+    <div class="container mt-0">
+        <h5 class="mb-4 text-center">Order History</h5>
+        <!-- Order Card 1 -->
+         {% for order in orders %}
+        <div class="card mb-4 order-card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <img src="{{order.product.image_1.url}}" alt="Product" class="product-img rounded">
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="card-title">{{order.product.product_name}}</h5>
+                        <p class="card-text text-muted">{{order.product.price}}-Rs/</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Address:</strong> {{order.delivery_address}}</p>
+                        <p class="mb-1"><strong>Pincode:</strong>{{order.pincode}}</p>
+                        <p class="mb-1"><strong>Phone:</strong>{{order.phone_number}}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <p class="mb-1"><strong>Quantity:</strong>{{order.quantity}}</p>
+                        <p class="mb-1"><strong>Total:</strong>{{order.total_amount}}-Rs/</p>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        {% if order.order_status == "Pending" %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                     {% endif %}
+                     {% if order.order_status == 'Delivered' %}
+                     <span class="badge bg-success">Delivered</span>
+                    {% endif %}
+               
+                    {% if order.order_status == 'Shipping' %}
+                    <span class="badge bg-info">Shipped</span>
+                    {% endif %}
+                    {% if order.order_status == 'Cancelled' %}
+                    <span class="badge bg-danger">Cancelled</span>
+                    {% endif %}
+                    {% if order.order_status == 'Confirmed' %}
+                    <span class="badge bg-info">Confirmed</span>
+                    {% endif %}
+                        {% for date in  order_dates %}
+                           {% if date.order_id == order.id %}
+                        {% if order.order_status == 'Confirmed' %}
+                        <p class="mb-2"><small>Delivered May be on:{{date.expect_date}}</small></p>
+                        {% endif %}
+                        {% if order.order_status == 'Shipping' %}
+                        <p class="mb-2"><small>Delivered :{{date.delivery_date}}</small></p>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        
+                        <a href="{% url 'customer:order_cancel' order.id %}" class="btn btn-outline-danger btn-sm cancel-btn">Cancel Order</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+<!-- {% include 'footer.html' %} -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Toastify Messages -->
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+
+
+{% endblock %}

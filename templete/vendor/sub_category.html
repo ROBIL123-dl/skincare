@@ -1,0 +1,82 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+
+{% block link_vblock %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+{% endblock %}
+
+{% block vbody_content %}
+{% include 'vendor\vendor_nav.html' %}
+<div class="container mt-4">
+    <h1>Add sub category</h1>
+</div>
+
+  
+
+  <div class="container mt-5">
+    <div class="alert alert-success" role="alert">
+           You can only add same category at one time , Before you add category ensure that category is exist or not.
+    </div>
+    <div class="row">
+       
+      <!-- Left Side: Scrollable List of Categories  -->
+      <div class="col-md-6" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+        <h4>Categories</h4>
+        <ul class="list-group">
+          {% if vendor_category == None %}
+            No categories,please add category
+          {% endif %}
+        {% for category in vendor_category %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{category.sub_name}}</span>
+            <!-- <div>
+              <a href="" class="btn btn-warning btn-sm update-btn">Update</a>
+              <a href="" class="btn btn-danger btn-sm">Delete</a> 
+            </div> -->
+          </li>
+        {% endfor %} 
+       
+         </ul> 
+      </div>
+      
+      <!-- Right Side: Create Category Form -->
+      <div class="col-md-6 mt-3">
+        <h4>Create Category</h4>
+        <form action="{% url 'vendor:subcategory' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="categoryName" class="form-label">Category</label>
+                 {{category.main_cat}}
+                 {{categroy.main_cat.errors}}
+              </div>
+          <div class="mb-3">
+            <label for="categoryName" class="form-label"> sub Category Name</label>
+             {{sub_category.name}}
+             {{sub_category.name.errors}}
+          </div>
+          <button type="submit" class="btn btn-success">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  {% if messages %}
+  {% for msg in messages %}
+  <script>
+      Toastify({
+          text: "{{msg}}",
+          className: "info",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
+  </script>
+  {% endfor %}
+  {% endif %}
+  
+  
+  
+{% endblock %}

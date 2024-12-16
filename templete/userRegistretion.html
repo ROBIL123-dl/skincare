@@ -1,0 +1,90 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block link_block %}
+
+<link rel="stylesheet" href="{% static 'nav.css' %}">
+<link rel="stylesheet" href="{% static 'c_signup.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block body_content %}
+{% include 'basic_nav.html' %}
+    
+  
+<div class="container">
+    <div class="form-container rounded shadow p-2" >
+        <h2 class="text-center mb-4"><strong>Reg</strong>isteration</h2>
+         
+   {% if messages%}
+   {% for error in messages %}
+   <div class="alert alert-success m-3" role="alert">
+       {{error}}
+     </div>
+ {% endfor %}
+{% endif %}
+        <form action="{% url 'signup' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+
+                <!-- Left Side -->
+                <div class="col-md-6 left">
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <b><label for="fullname" class="form-label">{{ form.full_name.label }}</label></b>
+                        {{ form.full_name }}
+                        {% for error in form.full_name.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <b><label for="username" class="form-label">{{ form.username.label }}</label></b>
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <b><label for="email" class="form-label">{{ form.email.label }}</label></b>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="col-md-6">
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <b><label for="password" class="form-label">{{ form.password.label }}</label></b>
+                        <small class="d-block mb-1">Password should have 8 characters with symbols ('@', '#', '*')</small>
+                        {{ form.password }}
+                        {% for error in form.password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Confirm Password -->
+                    <div class="mb-3">
+                        <b><label for="confirmPassword" class="form-label">{{ form.conform_password.label }}</label></b>
+                        {{ form.conform_password }}
+                        {% for error in form.conform_password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+{% include 'footer.html' %}
+<script src="{% static 'sign_up.js' %}"></script>
+{% endblock %}

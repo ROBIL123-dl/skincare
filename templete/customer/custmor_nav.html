@@ -1,0 +1,51 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'c_home'  %}">
+            <img src="{% static 'images/logo.png' %}" alt="Green Site Logo" width="30" height="30" class="d-inline-block align-top">
+            LushAura
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" aria-current="page">
+                        <i class="bi bi-house-door me-1" aria-hidden="true"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customer:shop'  %}">
+                        <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                        shop
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customer:view_cart' 0  %}">
+                        <i class="bi bi-cart me-1" aria-hidden="true"></i>
+                        Cart
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-heart me-1" aria-hidden="true"></i>
+                        Wishlist
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customer:customerProfile'  %}">
+                        <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
+                        Profile
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+      

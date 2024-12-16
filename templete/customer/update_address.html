@@ -1,0 +1,72 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block link_block %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+{% endblock %}
+{% block body_content %}
+     {% include 'customer/custmor_nav.html' %}
+     <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white text-center">
+                        <h4>update Address</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'customer:update_address' address.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        {{ form.full_name }}
+                                        <div class="text-danger small">{{ form.full_name.errors }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="country" class="form-label">Country</label>
+                                        {{ form.country }}
+                                        <div class="text-danger small">{{ form.country.errors }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        {{ form.pincode }}
+                                        <div class="text-danger small">{{ form.pincode.errors }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Address</label>
+                                        {{ form.addres }}
+                                        <div class="text-danger small">{{ form.addres.errors }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="state" class="form-label">State</label>
+                                        {{ form.state }}
+                                        <div class="text-danger small">{{ form.state.errors }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        {{ form.phone_number }}
+                                        <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address Type</label>
+                                <div>
+                                    <div class="form-check">
+                                        {{ form.current }}
+                                        <label class="form-check-label" for="notCurrentAddress"> Current Address</label>
+                                    </div>
+                                    <div class="text-danger small">{{ form.current.errors }}</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">update Address</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+{% block link_Ablock %}
+<link rel="stylesheet" href="{% static 'admin/nav.css' %}">
+
+
+{% endblock %}
+{% block Abody_content %}
+{% include 'custom_admin\nav.html' %}
+
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Vendor Approval </h2>
+        <div class="row border p-4 shadow-lg" style="min-height: 600px;">
+            <!-- Left Section -->
+            <div class="col-md-4 text-center d-flex flex-column align-items-center justify-content-center">
+                <h5 class="mb-3">Vendor Image</h5>
+                <img src="{{vender.photo.url}}" class="img-fluid rounded mb-3" alt="Vendor Image">
+                <h4>Vendor Name:{{vender.seller_name}}</h4>
+                <h6>Email:{{vender_user.email}}</h6>
+                <h6>Address:{{vender.addres}}</h6>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="col-md-8 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="text-center mb-3">vendor licence</h5>
+                    <img src="{{vender.license.url}}" class="img-fluid border rounded mb-3" alt="License Image">
+                </div>
+                
+                <!-- Email Input -->
+                <div class="mb-3">
+                    <form action="{% url 'novender_approved' vender.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    <label for="emailInput" class="form-label">Send Email to Vendor:</label>
+                    <input type="text" class="form-control" id="emailInput" name="email" placeholder="Write your email here...">
+                    
+                </div>
+
+                <!-- Approve/No Approve Buttons -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'vender_approved' vender.id %}"  class="btn btn-success px-4">Approve</a>
+                    <button type='submit' class="btn btn-danger px-4">No Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block link_block %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}"> 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+{% endblock %}
+{% block body_content %}
+     {% include 'customer/custmor_nav.html' %}
+     <div class="container my-2">
+        <div class="alert alert-success" role="alert">
+            Person should have only 4 addresses and one current address,if you have 4 address. You cannot add another address ,If you want. you detete or update address.
+          </div>
+        <div class="row">
+            <!-- Left Side: Add Address Form -->
+            
+          
+            <div class="col-md-6 border-end">
+                <h3 class="mb-4">Add Address</h3>
+                {% if count == True %}
+                <form action="{% url 'customer:address' customer.id  %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        {{ form.full_name }}
+                        {{ form.full_name.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        {{ form.addres }}
+                        {{ form.addres.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        {{ form.country }}
+                        {{ form.country.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="state" class="form-label">State</label>
+                        {{ form.state }}
+                        {{ form.state.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="pincode" class="form-label">Pincode</label>
+                        {{ form.pincode }}
+                        {{ form.pincode.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        {{ form.phone_number }}
+                        {{ form.phone_number.errors }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address Type</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="notCurrentAddress"> Current Address</label>
+                                {{ form.current }}
+                                {{ form.current.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Address</button>
+                </form>
+                {% else %}
+                <p class="text-danger">You cannot add more than 4 addresses.</p>
+          
+            {% endif %}
+    
+            </div>
+           
+            <!-- Right Side: List of Addresses -->
+            <div class="col-md-6 mt-4">
+                <h3 class="mb-4">Your Addresses</h3>
+                <ul class="list-group">
+                    <!-- Address Item -->
+                     {% if address %}
+                     {% for a in address %}
+                    <li class="list-group-item">
+                        <strong>{{a.full_name}}</strong>
+                        {% if a.current == 'YES' %}
+                        <small class="text-danger">current address</small>
+                        {% endif %}
+                        <br>
+                        {{a.addres}}<br>
+                        {{a.State}},{{a.country}},{{a.pincode}}<br>
+                        {{a.phone_number}}<br><br>
+                       
+                        <a href="{% url 'customer:update_address' a.id %}" class="btn btn-sm btn-success me-2">Update</a>
+                        <a href="{% url 'customer:delete_address' customer.id  a.id %}" class="btn btn-sm btn-secondary">Delete</a>
+                    </li>
+
+                    {% endfor %}
+                    {% else %}
+                </ul>
+                    <div class="alert alert-secondary" role="alert">
+                        No address is found ,Please add your address
+                      </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    {% if messages %}
+    {% for msg in messages %}
+    <script>
+        Toastify({
+            text: "{{msg}}",
+            className: "info",
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast();
+    </script>
+    {% endfor %}
+    {% endif %}
+{% endblock %}

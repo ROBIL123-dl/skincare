@@ -1,0 +1,97 @@
+{% extends 'vendor/base.html' %}
+{% load static %}
+
+{% block link_vblock %}
+
+
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+{% endblock %}
+
+{% block vbody_content %}
+{% include 'vendor/vendor_nav.html' %}
+<nav class="navbar seccond_nav" style=" background-color:rgb(249, 247, 247)">
+    <div class="container-fluid">
+      <a class="navbar-brand text-secondary">Order List</a>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  
+ 
+
+  <div class="container mt-0">
+    <h4 class="mb-4">Order Listing</h4>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Product Name</th>
+                    <th>Actual Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><b>#{{order.id}}</b></td>
+                    <td>{{order.customer.full_name}}</td>
+                    <td>{{order.product.product_name}}</td>
+                    <td>{{order.product.price}}<b>-Rs/</b></td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.total_amount}}<b>-Rs/</b></td>
+                    {% if order.order_status == "Pending" %}
+                      <td><span class="badge bg-warning text-dark">Pending</span></td>
+                    {% endif %}
+                    {% if order.order_status == 'Delivered' %}
+                    <td><span class="badge bg-success">Delivered</span></td>
+                  {% endif %}
+               
+                  {% if order.order_status == 'Shipping' %}
+                  <td><span class="badge bg-info">Shipping</span></td>
+                  {% endif %}
+                  {% if order.order_status == 'Cancelled' %}
+                  <td><span class="badge bg-danger">Cancelled</span></td>
+                  {% endif %}
+                  {% if order.order_status == 'Confirmed' %}
+                  <td><span class="badge bg-info">Confirmed</span></td>
+                  {% endif %}
+                  
+                    <td><a href="{% url 'vendor:order_detail' order.id %}" class="btn btn-primary btn-sm">Details</a></td>
+                </tr>
+                
+               {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Toastify JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{ msg }}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

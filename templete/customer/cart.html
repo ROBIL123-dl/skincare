@@ -1,0 +1,127 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block link_block %}
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+
+{% endblock %}
+
+{% block body_content %}
+{% include 'customer/custmor_nav.html' %}
+<div class="container mt-5">
+    <h1 class="mb-4">Your Shopping Cart</h1>
+    
+    <div class="row">
+        <div class="col-lg-8">
+           
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for product in cart_products %}
+<div class="col">
+    <div class="card h-100">
+        <a href="{% url 'customer:single_product' product.product_id.id %}">
+            <img src="{{ product.product_id.image_1.url }}" class="card-img-top" alt="Product 1">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">{{ product.product_id.product_name }}</h5>
+            {% if product.product_id.quantity == 0 %}
+            <p class="card-text text-danger">Not Available,Cannot buy</p>
+            {% endif %}
+            <p class="card-text">{{ product.product_id.price }} Rs/</p>
+            <b class="card-text">Total Quantity</b>
+            <div class="quantity-control d-flex align-items-center">
+                {%  if product.product_id.quantity > 5%}
+                <form action="{% url 'customer:update_quantity' %}" 
+                      id="update-quantity-form-{{ product.id }}" 
+                      method="post">
+                    {% csrf_token %}
+                    <!-- Hidden field for product ID -->
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+
+                    <!-- Input for quantity -->
+                    <input type="number" 
+                           id="quantity-input-{{ product.id }}" 
+                           name="quantity" 
+                           value="{{ product.total_quantity }}" 
+                           style="width:30px; border:0px" 
+                           oninput="this.setAttribute('value', this.value)">
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                    class="btn btn-sm btn-primary ms-2 update-quantity">
+                <i class="fas fa-sync-alt"></i> <!-- Font Awesome Update Icon -->
+            </button>
+                </form>
+                {% else %}
+                <p class="card-text">Qty:{{ product.total_quantity }}</p>
+                {% endif %}
+            </div>
+            <p class="card-text"><strong>Total price: </strong>{{ product.total_price }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a type="button" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-heart"></i> Wishlist
+                    </a>
+                    <a href="{% url 'customer:view_cart' product.id %}" 
+                       type="button" 
+                       class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Remove
+                    </a>
+                </div>
+                <a href="{% url 'customer:single_product_checkout' product.id %}" 
+                        class="btn btn-sm text-white" 
+                        style="background-color: #0a4322">
+                    Buy Now
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+           
+            </div>
+        </div>
+    
+        <div class="col-lg-4 mt-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Cart Summary</h5>
+                    <!-- <p class="card-text">Subtotal: $49.98</p>
+                    <p class="card-text">Tax (10%): $5.00</p> -->
+                    <h4>Total:{{ all_total_price.all_total }}<b class="text-warning">-Rs/</b></h4>
+                </div>
+            </div>
+            
+        <a href="{% url 'customer:all_products_checkout' %}" class="btn text-white"style="background-color:#0a4322">
+                <i class="fas fa-shopping-cart"></i> All Round Check Out
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+{% include 'footer.html' %}
+
+<!-- JavaScript for Image Preview -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{msg}}",
+        className: "info",
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+      }).showToast();
+    </script>
+    {% endfor %}
+    {% endif %}
+
+
+    
+{% endblock %}

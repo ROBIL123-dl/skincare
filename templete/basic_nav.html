@@ -1,0 +1,40 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'images\logo.png' %}" alt="Green Site Logo" width="30" height="30" class="d-inline-block align-top ">
+            LushAura
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" aria-current="page">
+                        <i class="bi bi-house-door me-1" aria-hidden="true"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                        About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'c_login'  %}">
+                        <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                        Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup'  %}">
+                        <i class="bi bi-person-plus me-1" aria-hidden="true"></i>
+                        Register
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
