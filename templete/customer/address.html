@@ -16,47 +16,47 @@
             
           
             <div class="col-md-6 border-end">
-                <h3 class="mb-4">Add Address</h3>
+                <h3 class="mb-4" style="color: #567253;">Add Address</h3>
                 {% if count == True %}
                 <form action="{% url 'customer:address' customer.id  %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="fullName" class="form-label">Full Name</label>
+                        <label for="fullName"  style="color: #567253;" class="form-label">Full Name</label>
                         {{ form.full_name }}
-                        {{ form.full_name.errors }}
+                        <ul class="text-danger">{{ form.full_name.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
+                        <label for="address"  style="color: #567253;" class="form-label">Address</label>
                         {{ form.addres }}
-                        {{ form.addres.errors }}
+                        <ul class="text-danger">{{ form.addres.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label for="country" class="form-label">Country</label>
+                        <label for="country"  style="color: #567253;" class="form-label">Country</label>
                         {{ form.country }}
-                        {{ form.country.errors }}
+                        <ul class="text-danger"> {{ form.country.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label for="state" class="form-label">State</label>
+                        <label for="state"  style="color: #567253;" class="form-label">State</label>
                         {{ form.state }}
-                        {{ form.state.errors }}
+                        <ul class="text-danger"> {{ form.state.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label for="pincode" class="form-label">Pincode</label>
+                        <label for="pincode"  style="color: #567253;" class="form-label">Pincode</label>
                         {{ form.pincode }}
-                        {{ form.pincode.errors }}
+                        <ul class="text-danger">{{ form.pincode.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <label for="phoneNumber" style="color: #567253;" class="form-label">Phone Number</label>
                         {{ form.phone_number }}
-                        {{ form.phone_number.errors }}
+                        <ul class="text-danger">{{ form.phone_number.errors }}</ul>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Address Type</label>
+                        <label class="form-label"  style="color: #567253;">Address Type</label>
                         <div>
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label" for="notCurrentAddress"> Current Address</label>
                                 {{ form.current }}
-                                {{ form.current.errors }}
+                                <ul class="text-danger">{{ form.current.errors }}</ul>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
            
             <!-- Right Side: List of Addresses -->
             <div class="col-md-6 mt-4">
-                <h3 class="mb-4">Your Addresses</h3>
+                <h3 class="mb-4"  style="color: #567253;">Your Addresses</h3>
                 <ul class="list-group">
                     <!-- Address Item -->
                      {% if address %}

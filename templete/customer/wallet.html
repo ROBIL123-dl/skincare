@@ -1,0 +1,48 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block link_block %}
+
+<link rel="stylesheet" href="{% static 'customer/wallet.css' %}">
+<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
+{% endblock %}
+{% block body_content %}
+     {% include 'customer/custmor_nav.html' %}
+
+    <div class="container mt-5">
+        <div class="row wallet-container">
+            <div class="col-md-4 total-amount p-4">
+                <h2>Total Amount</h2>
+                <h1 class="display-4">{{total_amount}}-Rs/</h1>
+            </div>
+            <div class="col-md-8 wallet-history p-4">
+                <h2 class="mb-4">Wallet History</h2>
+                <ul class="list-group">
+                    {% if wallet != 0%}
+                    {% for wall in wallet %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="transaction-details">
+                            <span>{{wall.vendor.seller_name}}</span>
+                            <b><span>{{wall.product.product_name}}</span></b>
+                            <span class="transaction-date">{{wall.created_at}}</span>
+                        </div>
+                        <span>{{wall.total_amount}}-Rs/</span>
+                        {% if wall.status == 'refund' %}
+                        <span style="color:rgb(218, 218, 27);">refund</span>
+                        {% endif %}
+                        {% if wall.status == 'paid' %}
+                        <span style="color:red;">paid</span>
+                        {% endif %}
+                        {% endfor %}
+                    </li>
+                    {% else %}
+                    <div class="alert alert-success" role="alert">
+                        You have no Wallet !
+                      </div>
+                    {% endif %}
+                </ul>
+               
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

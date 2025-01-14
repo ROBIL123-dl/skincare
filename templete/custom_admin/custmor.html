@@ -13,8 +13,9 @@
 <nav class="navbar" style=" background-color:rgb(249, 247, 247)">
     <div class="container-fluid">
       <a class="navbar-brand"><b>Admin Panel</b></a>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <form  class="d-flex" role="search" action="{% url 'customer_side' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+        <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
@@ -41,7 +42,11 @@
     
     <div class="user-card w-75 mx-auto mb-3">
       <div class="d-flex align-items-center">
-        <img src="https://via.placeholder.com/60" alt="User Image" class="rounded-circle border border-secondary">
+        {% if user.photo%}
+        <img src="{{user.photo.url}}" alt="User Image" class="rounded-circle border border-secondary">
+        {% else %}
+        <img src="{% static 'images/download.jpg' %}" alt="User Image" class="rounded-circle border border-secondary">
+        {% endif %}
         <div class="ms-3">
           <h5 class="mb-1">{{user.customer_id.full_name}}</h5>
           {% if user.customer_id.is_active == True %}
@@ -58,7 +63,10 @@
         <a href="{% url 'UnBlock_customer' user.customer_id.id %}"><button class="btn btn-warning me-2">UnBlock</button></a>
         {% endif %}
         
-        <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModal">
+        <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailsModal"
+                data-fullname="{{ user.customer_id.full_name }}"
+                data-email="{{ user.customer_id.email }}"
+                data-address="{{ user.phone_number }}">
           details
         </button>
       </div>
@@ -80,9 +88,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>Username:</strong>{{modal_customer.full_name}}</p>
-        <p><strong>Address:</strong> 1234 Main Street, Cityville</p>
-        <p><strong>Email ID:</strong>{{modal_customer.email}}</p>
+        <p><strong>Username:</strong> <span id="modalFullName"></span></p>
+        <p><strong>Phone number:</strong> <span id="modalAddress"></span></p>
+        <p><strong>Email ID:</strong> <span id="modalEmail"></span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -91,7 +99,26 @@
   </div>
 </div>
 
-
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const detailsButtons = document.querySelectorAll('.details-btn');
+    const modalFullName = document.getElementById('modalFullName');
+    const modalAddress = document.getElementById('modalAddress');
+    const modalEmail = document.getElementById('modalEmail');
+  
+    detailsButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const fullName = this.getAttribute('data-fullname');
+        const email = this.getAttribute('data-email');
+        const address = this.getAttribute('data-address');
+  
+        modalFullName.textContent = fullName;
+        modalAddress.textContent = address;
+        modalEmail.textContent = email;
+      });
+    });
+  });
+  </script>
 
 
       

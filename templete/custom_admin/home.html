@@ -1,23 +1,254 @@
 {% extends 'custom_admin/base.html' %}
 {% load static %}
 
-
 {% block link_Ablock %}
 <link rel="stylesheet" href="{% static 'admin/nav.css' %}">
-
+<link rel="stylesheet" href="{% static 'admin/dashboard.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block Abody_content %}
-{% include 'custom_admin\nav.html' %}
+{% include 'custom_admin/nav.html' %}
 
-{% include 'custom_admin\nav_search.html' %}
 
-<div class="container mt-4">
-    <h1>Welcome to the Admin Dashboard</h1>
-    <p>This is the main content area of your admin panel.</p>
+<div class="container-fluid mt-4">
+    <!-- <h1 class="mb-4">Admin Dashboard</h1> -->
+
+    <!-- Section 1: Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card overview-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Customers</h5>
+                    <p class="card-text display-4">{{total_customers}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card overview-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Vendors</h5>
+                    <p class="card-text display-4">{{total_vendors}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card overview-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Products</h5>
+                    <p class="card-text display-4">{{total_products}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Sales Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sales Count</h5>
+                    <p class="card-text display-4">{{sales_count}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sales Amount</h5>
+                    <p class="card-text display-4">{{sales_amount}}-Rs/</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Coupon Discount</h5>
+                    <p class="card-text display-4">{{coupon_discount}}-Rs/</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<hr>
+    <!-- Section 3: Graph and Top Products -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Statistics</h5>
+                    <div class="btn-group mb-3" role="group" aria-label="Order filter">
+                        <button type="button" class="btn " onclick="updateChart('monthly')">Monthly</button>
+                        <button type="button" class="btn " onclick="updateChart('yearly')">yearly</button>
+                        <button type="button" class="btn " onclick="updateChart('daily')">Daily</button>
+                    </div>
+                    <canvas id="orderChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Top Products</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for products in top_products %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ products.product_name }}
+                            <span class="badge  rounded-pill" style="background-color: darkgreen;">{{ products.id}}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<hr>
+    <!-- Section 4: Top Categories and Brands -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Top Best Selling Categories</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for cat in top_category %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                         {{ cat.subcategory_id__main_cat__name }}
+                            <span class="badge bg-secondary rounded-pill">{{ forloop.counter|add:0 }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Top  Best Selling Brands</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for brand in top_brands %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                             {{brand.brand_name}}
+                            <span class="badge bg-secondary rounded-pill">{{ forloop.counter|add:0 }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<hr>
+    <!-- Section Top Vendors -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Top Vendors</h5>
+                    <div class="row">
+                        {% for i in top_vendors %}
+                        <div class="col-md-4">
+                            <div class="card vendor-card text-secondary">
+                                <div class="card-body">
+                                    <h5 class="card-title "> {{i.vendor__seller_name}}</h5>
+                                    <p class="card-text">Total Sales: Rs/{{i.amount}}</p>
+                                    <p class="card-text">Products Sold: {{i.count}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<hr>
+<script>
+    
+        let chart;
+        const ctx = document.getElementById('orderChart').getContext('2d');
+    
+        const data = {
+            daily: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                values:JSON.parse('{{week_orders|safe}}'),
+            },
+            yearly: {
+                labels:JSON.parse('{{years|safe}}'),
+                values:JSON.parse('{{years_orders|safe}}'),
+            },
+            monthly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                values:JSON.parse('{{Months_order|safe}}'),
+            }
+        };
+    
+        function createChart(labels, values, period) {
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Orders',
+                        data: values,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Orders'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: period.charAt(0).toUpperCase() + period.slice(1)
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${period.charAt(0).toUpperCase() + period.slice(1)} Order Data`,
+                            font: {
+                                size: 18
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    
+        function updateChart(period) {
+            if (chart) {
+                chart.destroy();
+            }
+            chart = createChart(data[period].labels, data[period].values, period);
+            console.log(data[period].labels,data[period].values)
+            // Update active button
+            document.querySelectorAll('.btn-group button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === period) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    
+        // Initialize with monthly data when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            updateChart('monthly');
+        });
+    </script>
 
 {% endblock %}
-
-
 

@@ -8,9 +8,9 @@
         <div class="carousel-item active">
             <img src="{% static 'images\nS2neG6fjSs8eohitY2dAzRMIC7v7ePMeiIWHgROcfwMafQ5JA.jpg' %}" class="d-block w-100" alt="First slide">
             <div class="carousel-caption">
-                <h2>Welcome to Green Site</h2>
-                <p>Discover eco-friendly solutions for a sustainable future.</p>
-                <a href="{% url 'customer:shop' %}" class="btn btn-success btn-lg">Shop Now</a>
+                <h2>Welcome to Skin world</h2>
+                <p>Discover more items to care your skin.</p>
+                <a href="{% url 'customer:shop' 0 %}" class="btn btn-success btn-lg">Shop Now</a>
             </div>
         </div>
         <div class="carousel-item">
@@ -37,48 +37,11 @@
 <div class="container">
     <h2 class="text-center mb-4 brand_heading">Our Trusted Brands</h2>
     <div class="row flex-nowrap overflow-auto pb-2">
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EcoGreen</p>
+        {% for brand in trusted_brands%}
+        <div class="col-4 col-md-3 col-lg-2 brand-item">
+            <p>{{brand.brand_name}}</p>
         </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>NatureTech</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>GreenLife</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EarthWise</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>SustainCo</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>BioInnovate</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EcoSphere</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EcoGreen</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>NatureTech</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>GreenLife</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EarthWise</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>SustainCo</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>BioInnovate</p>
-        </div>
-        <div class="col-4 col-md-2 col-lg-1 brand-item">
-            <p>EcoSphere</p>
-        </div>
+        {% endfor %}
     </div>
 </div>
 </section>
@@ -87,13 +50,18 @@
 <h2 class="mb-4 text-center">Trending Products</h2>
 <div class="trending-products d-flex overflow-auto">
     <!-- Product Card -->
+     {% for i in top_products %}
     <div class="card product-card mx-3">
-        <img src="C:\Users\robil\OneDrive\Pictures\Screenshots\shopping (1).webp" class="card-img-top product-image" alt="Product 1">
+        <img src="{{i.image_1.url}}" class="card-img-top product-image" alt="Product 1">
         <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
+            {% if i.offer_price > 0 %}
+            <h5 class="card-title product-name">{{i.offer_price}}</h5>
+            {% else %}
+            <h5 class="card-title product-name">{{i.product_name}}</h5>
+            {% endif %}
+            <p class="card-text product-desc">Best selling product</p>
             <div class="product-price mb-3">
-                <strong>$29.99</strong>
+                <strong>Rs/{{i.price}}</strong>
             </div>
             <div class="rating mb-3">
                 <i class="bi bi-star-fill text-warning"></i>
@@ -103,239 +71,17 @@
                 <i class="bi bi-star text-warning"></i>
             </div>
             <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class=" btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class=" btn btn-outline-danger">
+                <a href="{% url 'customer:single_product' i.id 0 %}"><button class=" btn btn-outline-secondary">
+                    <i class="bi bi-eye"></i>
+                </button></a>
+                <a  href="{% url 'c_home' i.id %}" ><button class=" btn btn-outline-danger">
                     <i class="bi bi-heart"></i>
-                </button>
+                </button></a>
             </div>
-            <button class="btn  w-100">Add to Cart</button>
+            <!-- <button class="btn  w-100">Add to Cart</button> -->
         </div>
     </div>
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
+    {% endfor %}
 
     
 
@@ -347,17 +93,19 @@
 </div>
 </div>
 <!-- --- -->
-<div class="container my-5">
+
+<!-- <div class="container my-5">
 <h2 class="mb-4 text-center">Latest products</h2>
 <div class="trending-products d-flex overflow-auto">
-    <!-- Product Card -->
+     Product Card -->
+    <!-- {% for i in proucts %}
     <div class="card product-card mx-3">
-        <img src="C:\Users\robil\OneDrive\Pictures\Screenshots\shopping (1).webp" class="card-img-top product-image" alt="Product 1">
+        <img src="{{i.products.url}}" class="card-img-top product-image" alt="Product 1">
         <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
+            <h5 class="card-title product-name">{{i.product.product_name}}</h5>
             <p class="card-text product-desc">Brief description of the product.</p>
             <div class="product-price mb-3">
-                <strong>$29.99</strong>
+                <strong>Rs/{{i.products.price}}</strong>
             </div>
             <div class="rating mb-3">
                 <i class="bi bi-star-fill text-warning"></i>
@@ -377,249 +125,24 @@
             <button class="btn  w-100">Add to Cart</button>
         </div>
     </div>
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
-
-    <div class="card product-card mx-3">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top product-image" alt="Product 1">
-        <div class="card-body text-center">
-            <h5 class="card-title product-name">Product 1</h5>
-            <p class="card-text product-desc">Brief description of the product.</p>
-            <div class="product-price mb-3">
-                <strong>$29.99</strong>
-            </div>
-            <div class="rating mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-            </div>
-            <div class="actions d-flex justify-content-center gap-3 mb-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-cart"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-heart"></i>
-                </button>
-            </div>
-            <button class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-    </div>
-
     
 
+{% endfor %} -->
     
-
-    <!-- Duplicate Product Cards -->
     <!-- Copy the above block 9 more times for 10 cards -->
     <!-- You can add unique images, names, and prices for each product -->
-</div>
+ </div>
 </div>
 
-<section class="about-section">
+<section class="about-section" id="about">
 <div class="about-content">
   <div class="about-text">
     <h2>About Us</h2>
     <p>
-      Welcome to <strong>[Your Skincare Brand]</strong>! We are dedicated to providing high-quality skincare products that suit all skin types. Our mission is to enhance your natural beauty with safe, effective, and cruelty-free products. Discover the perfect solution for glowing, healthy skin with us!
+      Welcome to <strong>LushAura</strong>! We are dedicated to providing high-quality skincare products that suit all skin types. Our mission is to enhance your natural beauty with safe, effective, and cruelty-free products. Discover the perfect solution for glowing, healthy skin with us!
     </p>
     <p>
-      At <strong>[Your Skincare Brand]</strong>, we combine nature and science to bring you the best in skincare. Every product is crafted with love, using ingredients that are gentle yet effective. Whether you're tackling dryness, acne, or fine lines, we have the perfect solution for you.
+      At <strong>LushAura</strong>, we combine nature and science to bring you the best in skincare. Every product is crafted with love, using ingredients that are gentle yet effective. Whether you're tackling dryness, acne, or fine lines, we have the perfect solution for you.
     </p>
   </div>
   <div class="about-image">
@@ -634,7 +157,6 @@
 <div class="scroll-container d-md-none">
     <div class="scroll-item">
         <div class="testimonial-card card text-center p-3">
-            <img src="https://via.placeholder.com/80" alt="Client 1" class="testimonial-img mx-auto">
             <p class="testimonial-text">"This service is amazing! I couldn't be happier."</p>
             <p class="testimonial-name fw-bold">- John Doe</p>
         </div>
@@ -649,28 +171,27 @@
 <div class="row g-4 d-none d-md-flex">
     <div class="col-md-6 col-lg-3">
         <div class="testimonial-card card text-center p-3">
-            <img src="https://via.placeholder.com/80" alt="Client 1" class="testimonial-img mx-auto">
+            
             <p class="testimonial-text">"This service is amazing! I couldn't be happier."</p>
             <p class="testimonial-name fw-bold">- John Doe</p>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
         <div class="testimonial-card card text-center p-3">
-            <img src="https://via.placeholder.com/80" alt="Client 2" class="testimonial-img mx-auto">
+            
             <p class="testimonial-text">"Absolutely fantastic support and results."</p>
             <p class="testimonial-name fw-bold">- Jane Smith</p>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
         <div class="testimonial-card card text-center p-3">
-            <img src="https://via.placeholder.com/80" alt="Client 3" class="testimonial-img mx-auto">
+           
             <p class="testimonial-text">"Highly recommend to anyone looking for quality!"</p>
             <p class="testimonial-name fw-bold">- Alice Johnson</p>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
         <div class="testimonial-card card text-center p-3">
-            <img src="https://via.placeholder.com/80" alt="Client 4" class="testimonial-img mx-auto">
             <p class="testimonial-text">"The experience was beyond my expectations!"</p>
             <p class="testimonial-name fw-bold">- Robert Brown</p>
         </div>
@@ -682,9 +203,26 @@
 <div class="container">
     <h2>Become a Seller</h2>
     <p>Join us to showcase your products to millions of customers worldwide.</p>
+    <p class=" text-white">If you are customer.You want to join or loign .Please logout from your customer profile.</p><br>
     <div>
         <a href="{% url 'v_signup'  %}" class="btn">Register</a>
         <a href="{% url 'v_login'  %}" class="btn">Login</a>
     </div>
 </div>
 </section>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{msg}}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #0a4322, #567253)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}

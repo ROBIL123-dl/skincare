@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+{% block link_Ablock %}
+    
+    <link rel="stylesheet" href="{% static 'admin/productlist.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    {% endblock %}
+
+    {% block Abody_content %}
+    {% include 'custom_admin/nav.html' %}
+    <h4 class="mt-2 text-secondary p-2">Vendors products</h4>
+
+    <div class="container mt-2">
+        {% for vendoer in vendors %}
+        <div class="vendor-info text-center">
+            <h2 class="mb-2">{{vendoer.seller_name}}</h2>
+            <p class="mb-0">Vendor ID:{{vendoer.id}}</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <!-- Product Card 1 -->
+            {% for product in products %}
+            {% if product.seller_id == vendoer %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4 card-img-container">
+                            <img src="{{product.image_1.url}}" class="img-fluid rounded-start card-img-top" alt="Organic Apples">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body text-secondary">
+                                <h5 class="card-title">{{product.product_name}}</h5>
+                                <p class="card-text"><strong>Price:</strong>-Rs/{{product.price}}/</p>
+                                <p class="card-text"><strong>Quantity:</strong>{{product.quantity}}</p>
+                                <p class="card-text offer-text">Price Offer:-Rs/{{product.offer_price }}/off</p>
+                                <p class="card-text offer-text">Category Offer:-Rs/{{product.subcategory_id.main_cat.offer_price}}/</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
+                            {% if product.admin_status == True %}
+                            <a  href="{% url 'products' product.id 'block' %}" style="background-color:#567253;color: white" class="btn">Block</a>
+                            {% else %}
+                            <a  href="{% url 'products' product.id 'unblock' %}" class="btn btn-secondary">UnBlock</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <hr>
+        <br>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  
+  {% if messages %}
+  {% for msg in messages %}
+  <script>
+      Toastify({
+          text: "{{ msg }}",
+          className: "info",
+          style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+      }).showToast();
+  </script>
+  {% endfor %}
+  {% endif %}
+  
+  {% endblock %}
+  

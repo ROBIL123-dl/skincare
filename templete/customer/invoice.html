@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #444;
+        }
+        .order-info h6 {
+            margin: 5px 0;
+            font-weight: normal;
+        }
+        .table-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table-header {
+            background: #f8f8f8;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+        .row {
+            display: flex;
+            padding: 10px;
+            align-items: center;
+        }
+        .border-bottom {
+            border-bottom: 1px solid #ddd;
+        }
+        .text-end {
+            text-align: right;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-details {
+            color: #666;
+        }
+        .total-row {
+            font-weight: bold;
+            background: #f8f8f8;
+            padding: 15px 10px;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="container">
+        <i style="color:#0a4322;">Lushaura</i>
+        <div class="header">
+            <h1>Invoice</h1>
+            <p>Thank you for your order!</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Order details</4>
+                <div class="order-info">
+                    <h6>Name:{{order.customer.full_name}}</h6>
+                    <h6>Address:{{order.delivery_address}}</h6>
+                    <h6>pincode:{{order.pincode}}</h6>
+                    <h6>phone number:{{order.phone_number}}</h6>
+                    {% if payment %}
+                    <h6>Payment method: <small>{{ payment.payment_category }}</small></h6>
+                    <h6>Transaction Id: <small>{{ payment.transaction_id }}</small></h6>
+                    {% else %}
+                    <h6>Payment method: <small>Cash on delivery</small></h6>
+                    {% endif %}
+                    <h6>Order Created time: <small>{{ order.created_at }}</small></h6>
+                </div>
+                <div class="table-container">
+                    <div class="row mb-3 table-header py-2 d-none d-md-flex">
+                        <div class="col-md-3">Product</div>
+                        <div class="col-md-1">Quantity</div>
+                        <div class="col-md-2">Product Offer</div>
+                        <div class="col-md-2">Category Offer</div>
+                        <div class="col-md-2">Coupon Offer</div>
+                        <div class="col-md-1">Price</div>
+                        <div class="col-md-1 text-end">Total</div>
+                    </div>
+                    {% for product in order_products %}
+                    <div class="row mb-3 py-2 border-bottom align-items-center">
+                        <div class="col-md-3 mb-2 mb-md-0">
+                            <div class="product-name">{{ product.product.product_name }}</div>
+                            <div class="product-details d-md-none">Qty: {{ product.quantity }} x {{ product.product.price }}</div>
+                        </div>
+                        <div class="col-md-1 d-none d-md-block">{{ product.quantity }}</div>
+                        <div class="col-md-2 d-none d-md-block">{{ product.product_offer }}</div>
+                        <div class="col-md-2 d-none d-md-block">{{ product.cat_offer }}</div>
+                        <div class="col-md-2 d-none d-md-block">{{ product.coupon_price }}</div>
+                        <div class="col-md-1 d-none d-md-block">{{ product.product.price }}-Rs/</div>
+                        <div class="col-md-1 text-end">{{ product.total_amount }}-Rs/</div>
+                    </div>
+                    {% endfor %}
+                    <div class="row total-row py-2">
+                        <div class="col-6 col-md-11 text-end">Total (including shipping(50/RS)):</div>
+                        <div class="col-6 col-md-1 text-end">{{ total_amount.total|add:50 }}-Rs/</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

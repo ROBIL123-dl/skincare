@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .return-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="return-container p-4">
+                    <h2 class="text-center mb-4">Return Product</h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <h4>Order Details</h4>
+                                <p><strong>Order Number:</strong> #{{order.id}}</p>
+                                <p><strong>Product:</strong>{{order.product.product_name}}</p>
+                                <p><strong>Quantity:</strong>{{order.quantity}}</p>
+                                <p><strong>Price:</strong>{{order.total_amount}}</p>
+                                <p><strong>Purchase Date:</strong>{{order.created_at}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="{{order.product.image_1.url}}" alt="Product Image" class="product-image mb-3">
+                        </div>
+                    </div>
+                    <form action="{% url 'customer:return' order.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="returnReason" class="form-label">Reason for Return</label>
+                            <textarea class="form-control" name="reason" id="returnReason" rows="3" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit Return Request</button>
+                            <a class="btn btn-primary">back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

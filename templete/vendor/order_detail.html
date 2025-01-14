@@ -1,96 +1,176 @@
+
 {% extends 'vendor/base.html' %}
 {% load static %}
 
 {% block link_vblock %}
-
-
 <link rel="stylesheet" href="{% static 'customer/profile.css' %}">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    :root {
+        --primary-color: #0a4322;
+        --secondary-color: #567253;
+        --background-color: #f4f4f4;
+        --text-color: #333;
+    }
+    body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+    }
+</style>
 {% endblock %}
 
 {% block vbody_content %}
-
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title mb-4">Order Detail</h3>
-            <div class="row">
+<div class="container mx-auto mt-10 px-4">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-6">
+            <h3 class="text-2xl font-bold mb-6 text-primary-color">Order Detail</h3>
+            <div class="flex flex-wrap -mx-4">
                 <!-- Left side: Product and Customer Info -->
-                
-                <div class="col-md-6">
-                    <img src="{{detail.product.image_1.url}}" alt="Product Image" class="img-fluid rounded mb-3">
-                    <h3>{{detail.product.product_name}}</h3>
-                    <h6 class="mt-4">Customer Information</h6>
-                    <p><strong>Name:</strong>{{detail.customer.full_name}}</p>
-                    <p><strong>Address:</strong>{{detail.delivery_address}}</p>
-                    <p><strong>Pincode:</strong>{{detail.pincode}}</p>
-                    <p><strong>phone_no:</strong>{{detail.phone_number}}</p>
-            
-                </div>
-
-                <!-- Right side: Order Details and Status -->
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between mb-4">
-                        <div>
-                            <p><strong>Order Date:</strong>{{detail.created_at}}</p>
-                           
-                        </div>
-                        <div>
-                        {% if detail.order_status == "Pending" %}
-                      <span class="badge bg-warning text-dark">Pending</span>
-                     {% endif %}
-                     {% if detail.order_status == 'Delivered' %}
-                     <span class="badge bg-success">Delivered</span>
-                    {% endif %}
-               
-                    {% if detail.order_status == 'Shipping' %}
-                    <span class="badge bg-info">Shipped</span>
-                    {% endif %}
-                    {% if detail.order_status == 'Cancelled' %}
-                    <span class="badge bg-danger">Cancelled</span>
-                    {% endif %}
-                    {% if detail.order_status == 'Confirmed' %}
-                    <span class="badge bg-info">Confirmed</span>
-                    {% endif %}
-                        </div>
+                <div class="w-full md:w-1/2 px-4 mb-6">
+                    <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                        <img src="{{detail.product.image_1.url}}" alt="Product Image" class="w-full h-64 object-cover rounded-lg mb-4 transition-transform duration-300 hover:scale-105">
+                        <h3 class="text-xl font-semibold mb-2">{{detail.product.product_name}}</h3>
                     </div>
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div><strong>Quantity:</strong>{{detail.quantity}}</div>
-                                <div><strong>Actual Price:</strong>{{detail.product.price}}-Rs/</div>
-                                <div><strong>Total Price:</strong>{{detail.total_amount}}-Rs/</div>
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h6 class="text-lg font-semibold mb-3">Customer Information</h6>
+                        <hr>
+                        <p class="mb-2 text-secondary"><strong>Name:</strong> {{detail.customer.full_name}}</p>
+                        <p class="mb-2 text-secondary"><strong>Address:</strong> {{detail.delivery_address}}</p>
+                        <p class="mb-2 text-secondary"><strong>Pincode:</strong> {{detail.pincode}}</p>
+                        <p class="mb-2 text-secondary"><strong>Phone:</strong> {{detail.phone_number}}</p>
+                    </div>
+                    
+                    <div class="mt-6 bg-white rounded-lg p-4 shadow">
+                        <h5 class="text-lg font-semibold mb-3">Order Status</h5>
+                         <hr>
+                            {{detail.order_status}}
+                        </span>
+                        <div>
+                            {% if detail.order_status == "Pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                           {% endif %}
+                           {% if detail.order_status == 'Delivered' %}
+                           <span class="badge bg-success">Delivered</span>
+                          {% endif %}
+                     
+                          {% if detail.order_status == 'Shipping' %}
+                          <span class="badge bg-info">Shipped</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Cancelled' %}
+                          <span class="badge bg-danger">Cancelled</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Confirmed' %}
+                          <span class="badge bg-info">Confirmed</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Returned' %}
+                          <span class="badge bg-danger">Returned</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Return' %}
+                          <span class="badge bg-danger">Return</span>
+                          {% endif %}
+                        </div>
+                        {% if return_details %}
+                        <p class="mt-2">Return date: {{return_details.created_at}}</p>
+                        <p class="font-semibold mt-2">Reason for return product:</p>
+                        <p>{{return_details.reason}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+ 
+                <!-- Right side: Order Details and Status -->
+                <div class="w-full md:w-1/2 px-4">
+                    <div class="bg-white rounded-lg p-6 shadow mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <p><strong class="text-secondary">Order Date:</strong> {{detail.created_at}}</p>
+                            <div>
+                                 {% if detail.order_status == "Pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                           {% endif %}
+                           {% if detail.order_status == 'Delivered' %}
+                           <span class="badge bg-success">Delivered</span>
+                          {% endif %}
+                     
+                          {% if detail.order_status == 'Shipping' %}
+                          <span class="badge bg-info">Shipped</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Cancelled' %}
+                          <span class="badge bg-danger">Cancelled</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Confirmed' %}
+                          <span class="badge bg-info">Confirmed</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Returned' %}
+                          <span class="badge bg-danger">Returned</span>
+                          {% endif %}
+                          {% if detail.order_status == 'Return' %}
+                          <span class="badge bg-danger">Return</span>
+                          {% endif %}
+                        </div>
+                        {% if return_details %}
+                        <p class="mt-2">Return date: {{return_details.created_at}}</p>
+                        <p class="font-semibold mt-2">Reason for return product:</p>
+                        <p>{{return_details.reason}}</p>
+                        {% endif %}
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-4">
-                        <form action="{% url 'vendor:order_detail' detail.id %}" method="post">
+
+                        <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                            <div class="flex justify-between items-center">
+                                <div class="text-secondary"><strong>Quantity:</strong> {{detail.quantity}}</div>
+                                <div class="text-secondary"><strong>Actual Price:</strong> {{detail.product.price}} Rs</div>
+                                <div class="text-secondary"><strong>Total Price:</strong> {{detail.total_amount}} Rs</div>
+                            </div>
+                        </div>
+
+                        {% if detail.order_status != 'Cancelled' and detail.order_status != 'Returned' %}
+                        <form action="{% url 'vendor:order_detail' detail.id %}" method="post" class="mb-6">
                             {% csrf_token %}
-                        <label for="statusUpdate" class="form-label"><strong>Update Status:</strong></label>
-                        <select class="form-select" name="status"  id="statusUpdate">
-                            <option selected>{{detail.order_status}}</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Shipping">Shipping</option>
-                            <option value="Confirmed">Confirmed</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
+                            <label for="statusUpdate" class="block text-sm font-medium text-gray-700 mb-2">Update Status:</label>
+                            <select class="form-select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-primary-color focus:ring focus:ring-primary-color focus:ring-opacity-50" name="status" id="statusUpdate">
+                                <option selected>{{detail.order_status}}</option>
+                                {% if detail.order_status != 'Return' %}
+                                <option value="Pending">Pending</option>
+                                <option value="Shipping">Shipping</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                                {% endif %}
+                                {% if detail.order_status == 'Return' %}
+                                <option value="Returned">Approved</option>
+                                {% endif %}
+                            </select>
+                            <button type="submit" class="btn-primary mt-4 py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">Update Status</button>
+                        </form>
+                        {% endif %}
 
-                    <button  type="submit" class="btn btn-primary">update Satuts</button>
-
-                    <div class="text-end">
-                        <a  href="{% url 'vendor:order_list' %}"   class="btn btn-primary">Back to Orders</a>
+                        <div class="text-right">
+                            <a href="{% url 'vendor:order_list' %}" class="btn-primary py-2 px-4 rounded inline-block transition duration-300 ease-in-out transform hover:scale-105">Back to Orders</a>
+                        </div>
+                        <div class="mt-6 bg-white rounded-lg p-4 shadow">
+                            <h5 class="text-lg font-semibold mb-3">Payment Details</h5>
+                            <hr>
+                            <!-- Add payment details here -->
+                            <div class="text-secondary"><strong>Payment Method:</strong> {{detail.Payment.payment_category}}</div>
+                            <div class="text-secondary"><strong>payment id:</strong> {{detail.Payment.transaction_id}}</div>
+                            <div class="text-secondary"><strong>Payment amount:</strong> {{detail.Payment.amount}}/Rs</div>
+                            <div class="text-secondary"><strong>Payment status:</strong> {{detail.Payment.status}}</div>
+                            <div class="text-secondary"><strong>Payment Time:</strong> {{detail.Payment.created_at}}</div>
+                        </div>
                     </div>
+                   
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-  
 
 <!-- Toastify JS -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -101,10 +181,12 @@
         text: "{{ msg }}",
         className: "info",
         style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: "linear-gradient(to right, var(--primary-color), var(--secondary-color))",
         }
     }).showToast();
 </script>
 {% endfor %}
 {% endif %}
 {% endblock %}
+
+

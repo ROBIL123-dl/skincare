@@ -9,6 +9,7 @@ def generate_otp():
       secret = pyotp.random_base32()
       totp = pyotp.TOTP(secret, interval=120)      #funtion for generate otp
       otp = totp.now()
+      print(otp)
       return otp
 
 def verify_otp(otp,user_otp):

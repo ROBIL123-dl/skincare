@@ -1,5 +1,8 @@
 from django import forms
 from .models import *
+from django.core.exceptions import ValidationError
+import re
+
 
 
 #  user registration form
@@ -45,6 +48,21 @@ class User_registretion(forms.ModelForm):
         model = User
         fields = ['full_name', 'username', 'email','password']
         
+    
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get('full_name')
+        if not re.match(r'^[a-zA-Z\s]+$', full_name):
+            raise ValidationError("Full Name must contain only letters and spaces.")
+        return full_name
+     
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("This username is already taken.")
+        if not re.match(r'^[a-zA-Z0-9_.-]+$', username):
+            raise ValidationError("Username can only contain letters, numbers, dots, underscores, and hyphens.")
+        return username 
+    
     def clean(self):
         symbols=['@','*','#']
         count=0
@@ -67,7 +85,7 @@ class User_registretion(forms.ModelForm):
         if password != conform_password:
          
             raise forms.ValidationError("please enter correct password")
-        
+          
     def save(self,role=0, commit=True):
         full_name = self.cleaned_data['full_name']
         user_name = self.cleaned_data['username']           # funtion for save forms valid data to User model
@@ -92,6 +110,7 @@ class User_registretion(forms.ModelForm):
                                       Role = role
                                       )
         return user
+    
  # ---------------customer registretion form class closed---------> 
  
 # vendor licence register form 
@@ -121,9 +140,17 @@ class Vendor_license(forms.ModelForm):
     
     photo=forms.ImageField(
                 label="image",
-                widget=forms.FileInput(attrs={'class': 'form-control'}),
-               
+                widget=forms.FileInput(attrs={'class': 'form-control'}), 
              )
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number)) != 10:
+            raise forms.ValidationError("Phone number must be 10 digits long!")
+        if len(set(phone_number)) == 1:  
+           raise forms.ValidationError("Phone number cannot consist of the same digit repeated!")
+        if not phone_number.isdigit():
+             raise forms.ValidationError("Phone number must contain only digits!")
+        return phone_number
     
     class Meta:
         model =Vendor_profile 
@@ -168,10 +195,32 @@ class CategoryForm(forms.ModelForm):
         'placeholder': 'Enter description here...'
     }),
     )
+    offer_price = forms.DecimalField(
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter price'}),
+        error_messages={'required': 'Price is required', 'invalid': 'Please enter a valid price'})
     
     class Meta:
         model =Category 
-        fields = ['name','desc']
-#closed 
-    
+        fields = ['name','desc','offer_price']
         
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+
+        if not name.replace(' ', '').isalnum():
+            raise forms.ValidationError("Name can only contain letters, numbers, and spaces.")
+        
+        if len(name.strip()) < 2:
+            raise forms.ValidationError("Name must be at least 3 characters long.")
+        
+        return name
+        
+    def clean_offer_price(self):
+        offer_price = self.cleaned_data.get('offer_price')
+        if offer_price <= 0:
+            raise forms.ValidationError("Price must be greater than zero.")
+        return offer_price
+#closed 
+
+
+

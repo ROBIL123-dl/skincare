@@ -21,25 +21,32 @@
                 <div class="mb-3">
                     <label for="product_name" class="form-label">Product Name</label>
                     {{ form.product_name }}
-                    {{ form.product_name.errors }}
+                    <ul class="text-danger">{{ form.product_name.errors }}</ul>
                 </div>
                 <!-- Product Subname -->
                 <div class="mb-3">
                     <label for="product_subname" class="form-label">Product Subname</label>
                     {{ form.product_subname }}
-                    {{ form.product_subname.errors }}
+                    <ul class="text-danger">{{ form.product_subname.errors }}</ul>
                 </div>
                 <!-- Description -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     {{ form.description }}
-                    {{ form.description.errors }}
+                    <ul class="text-danger">{{ form.description.errors }}</ul>
                 </div>
                 <!-- Price -->
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
                     {{ form.price }}
-                    {{ form.price.errors }}
+                    <ul class="text-danger">{{ form.price.errors }}</ul>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="price" class="form-label">offer Price</label>
+                    <p><small>product haven,t offer ,add '0' </small></p>
+                    {{ form.offer_price }}
+                    <ul class="text-danger">{{ form.offer_price.errors }}</ul>
                 </div>
                 <!-- Primary Image -->
                 <div class="mb-3">
@@ -55,7 +62,7 @@
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
                     {{ form.quantity }}
-                    {{ form.quantity.errors }}
+                    <ul class="text-danger">{{ form.quantity.errors }}</ul>
                 </div>
                 <!-- Brand Name -->
                 <div class="mb-3">

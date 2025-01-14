@@ -1,6 +1,6 @@
 from django import forms
 from user_management.models import *
-
+import re
 class customer_profile(forms.ModelForm):
     class Meta:
         model =Customer_profile 
@@ -25,6 +25,17 @@ class customer_profile(forms.ModelForm):
         widget=forms.FileInput(attrs={'class': 'form-control'}),
                 error_messages={'required': 'upload your photo!'}
         )
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number)) != 10:
+            raise forms.ValidationError("Phone number must be 10 digits long!")
+        return phone_number
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Add cross-field validations here if needed
+        return cleaned_data
     
     
 
@@ -76,7 +87,43 @@ class address_form(forms.ModelForm):
         widget=forms.RadioSelect(choices=customer_address.ROLE_CHOICES),
         error_messages={'required': 'please specify the value!'}
     )
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get('full_name')
+        if not re.match(r'^[a-zA-Z\s]+$', full_name):
+            raise forms.ValidationError("Full Name must contain only letters and spaces.")
+        return full_name
     
+    def clean_pincode(self):
+        pincode = self.cleaned_data.get('pincode')
+        if len(str(pincode)) != 6:
+            raise forms.ValidationError("Pincode must be exactly 6 digits!")
+        return pincode
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number)) != 10:
+            raise forms.ValidationError("Phone number must be 10 digits long!")
+        if len(set(phone_number)) == 1:  
+           raise forms.ValidationError("Phone number cannot consist of the same digit repeated!")
+        if not phone_number.isdigit():
+             raise forms.ValidationError("Phone number must contain only digits!")
+        return phone_number
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if not country.isalpha():
+            raise forms.ValidationError("Country must contain only letters!")
+        return country
+
+    def clean_state(self):
+        state = self.cleaned_data.get('state')
+        if not state.isalpha():
+            raise forms.ValidationError("State must contain only letters!")
+        return state
+
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
 class password_form(forms.ModelForm):
     
     class Meta:
@@ -110,14 +157,11 @@ class password_form(forms.ModelForm):
                 if i in symbols:
                     count +=1 
         else:
-          print('hello')
           raise forms.ValidationError("Password should have 8 character")
          
         if count == 0:
-            print('count')
             raise forms.ValidationError("Please add symbols in password")
         if password != conform_password:
-            print('conform')
             raise forms.ValidationError("please enter correct password")
         
 class email_form(forms.ModelForm):

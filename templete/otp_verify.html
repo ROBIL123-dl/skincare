@@ -14,7 +14,11 @@
     <p id="timer">Time remaining: 05:00</p>
     
     <!-- OTP Input Form -->
-    <form action="{% url 'verify_otp' user.id %}" method="post" enctype="multipart/form-data">
+    {% if status != 'forgot' %}
+    <form action="{% url 'verify_otp' user.id 'none' %}" method="post" enctype="multipart/form-data">
+    {% else %}
+    <form action="{% url 'verify_otp' user.id 'forgot' %}" method="post" enctype="multipart/form-data">
+    {% endif %}
       {% csrf_token %}
       <div class="otp-inputs">
         <input type="text" name="n1" maxlength="1" class="otp-input">
@@ -26,8 +30,11 @@
       </div>
       <button type="submit" id="verify-btn">Verify OTP</button>
       <p id="message"></p>
-    <a href="{% url 'reset_otp' user.id %}" id="reset-otp-link" style="display: none; color: blue;">Resend OTP</a>
-
+      {% if status != 'forgot' %}
+      <a href="{% url 'reset_otp' user.id 'none' %}" id="reset-otp-link" style="display: none; color: blue;">Resend OTP</a>
+      {% else %}
+      <a href="{% url 'reset_otp' user.id 'forgot' %}" id="reset-otp-link" style="display: none; color: blue;">Resend OTP</a>
+       {% endif %}
     </form>
     {% if messages %}
     <div class="alert alert-danger row justify-content-center mt-5 w-3" role="alert">
@@ -97,6 +104,7 @@
     
     // Start the 2-minute timer when the page loads
     startTimer();
+    
     
 </script>
 </body>

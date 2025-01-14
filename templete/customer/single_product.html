@@ -2,91 +2,106 @@
 {% load static %}
 
 {% block link_block %}
-<link rel="stylesheet" href="{% static 'customer/profile.css' %}">
-<link rel="stylesheet" href="{% static 'customer/single.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link href="{% static 'customer/singleproduct.css' %}" rel="stylesheet">
+<link href="{% static 'footer.css' %}" rel="stylesheet"> 
 {% endblock %}
 
 {% block body_content %}
 {% include 'customer/custmor_nav.html' %}
-
+       
 <div class="container">
-  <div class="product-container">
-    <div class="product-images">
-      <img src="{{product.image_1.url}}" alt="Product Image" class="main-image">
-      <div class="thumbnail-container">
-        <img src="{{product.image_1.url}}" alt="Thumbnail 1" class="thumbnail">
-        <img src="{{product.image_2.url}}" alt="Thumbnail 2" class="thumbnail">
-        <img src="{{product.image_3.url}}" alt="Thumbnail 3" class="thumbnail">
-        <img src="{{product.image_1.url}}" alt="Thumbnail 4" class="thumbnail">
-      </div>
+    <div class="product-container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{product.image_1.url}}" alt="Product Image" class="main-image">
+                <div class="thumbnail-container">
+                    <img src="{{product.image_1.url}}" alt="Thumbnail 1" class="thumbnail">
+                    <img src="{{product.image_2.url}}" alt="Thumbnail 2" class="thumbnail">
+                    <img src="{{product.image_3.url}}" alt="Thumbnail 3" class="thumbnail">
+                    <img src="{{product.image_1.url}}" alt="Thumbnail 4" class="thumbnail">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h1 class="product-title">{{product.product_name}}</h1>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(128 reviews)</span>
+                </div>
+                <p class="product-price text-secondary">{{product.price}}</p>
+                {% if product.offer_ > 0 %}
+                <p class="product-price  text-secondary">Offer-{{product.offer_price}}</p>
+                {% endif %}
+                {% if product.quantity > 0 %}
+                <span class="badge bg-success">In Stock</span>
+                {% else %}
+                <span class="badge bg-danger">Out of Stock</span>
+                {% endif %}
+                <p class="product-description mt-3 " style="color: grey;">{{product.description}}</p>
+                <div style="display: flex; align-items: center; background-color: #f0f0f0; border-radius: 8px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                    <span style="font-size: 24px; margin-right: 10px; color: #0a4322;">&#128230;</span>
+                    <div>
+                        <p style="margin: 0; font-size: 14px; color: #567253;">Size Variant:</p>
+                        <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0a4322;">{{product.product_size}}</p>
+                    </div>
+                </div>
+                <div class="product-actions">
+                    {% if product.quantity > 5 %}
+                    <form class="mt-5" action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="quantity-selector">
+                            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
+                            <input id="quantity" name="value" value="1" readonly class="form-control">
+                            <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <a href="{% url 'customer:single_product' product.id product.id %}" class="btn btn-secondary">Add to Wishlist</a>
+                    </form>
+                    {% else %}
+                    {% if product.quantity > 0 %}
+                    <form  class="mt-5" action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input id="quantity" name="value" value="1" readonly class="form-control mb-2" style="width: 60px;">
+                        <span class="text-danger mb-2 d-block">Product has minimum quantity. You can only buy single product.</span>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <a href="{% url 'customer:single_product' product.id product.id %}" class="btn btn-secondary">Add to Wishlist</a>
+                    </form>
+                    {% else %}
+                    <span class="text-danger">Product is not available</span>
+                    <p><a href="{% url 'customer:single_product' product.id product.id %}" class="btn btn-secondary mt-2">Add to Wishlist</a></p>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="product-details mt-5">
-      <h1 class="product-title">{{product.product_name}}</h1>
-      <div class="product-rating">
-        <span class="stars">★★★★★</span>
-        <span class="review-count">(128 reviews)</span>
-      </div>
-      <p class="product-price">{{product.price}}</p>
-      {% if product.quantity > 0%}
-      <span class="text-success">In Stock</span>
-      {% else %}
-      <span class="text-danger">Out of Stock</span>
-      {% endif %}
-      <p class="product-description">{{product.description}}</p>
-      <div class="product-actions">
-        <div class="quantity-selector">
-          {% if product.quantity > 5 %}
-          <form action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-          <a class="btn btn-warning text-white" id="decrease" onclick="decreaseQuantity()">-</a>
-          <input id="quantity" name="value" value="1" readonly style="width:25px; border:0px">
-          <a id="increase" class="btn btn-warning text-white" onclick="increaseQuantity()">+</a>
-      </div>
-        <button type="submit" class="btn btn-secondary">Add to Cart</button>
-        {% else %}
-        {% if product.quantity > 0 %}
-        <form action="{% url 'customer:add_to_cart' product.id %}" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-        <input id="quantity" name="value" value="1" readonly style="width:25px; border:0px">
-        <span class="text-danger mx-2">Product have minimum quantity,You can only buy single product </span>
-        <button type="submit" class="btn btn-secondary">Add to Cart</button>
-     </form>
-     {% else %}
-     <span class="text-danger mx-2">Product is not available</span>
-     {% endif %}
-    {% endif %}
-
-        <a class="btn btn-success">Add to Wishlist</a>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- Related Products -->
-<div class="container my-5">
-  <h3 class="mb-4 text-center">Related Products</h3>
-  <div class="row g-4">
-    {% for relate in category %}
-    <div class="col-6 col-md-3">
-      <div class="card">
-        <a href="{% url 'customer:single_product' relate.id %}">
-          <img src="{{relate.image_1.url}}" class="card-img-top" alt="Product Image">
-        </a>
-        <div class="card-body text-center">
-          <h5 class="card-title">{{relate.product_name}}</h5>
-          <p class="card-text">{{relate.price}} Rs/</p>
-          <a href="{% url 'customer:single_product' relate.id %}" class="btn btn-sm btn-success">View product</a>
+<div class="container my-5 related-products">
+    <h3 class="mb-4 text-center">Related Products</h3>
+    <div class="row row-cols-2 row-cols-md-4 g-4">
+        {% for relate in category %}
+        <div class="col">
+            <div class="card h-100">
+                <a href="{% url 'customer:single_product' relate.id 0 %}">
+                    <img src="{{relate.image_1.url}}" class="card-img-top" alt="Product Image">
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{relate.product_name}}</h5>
+                    <p class="card-text">{{relate.price}} Rs/</p>
+                    <a href="{% url 'customer:single_product' relate.id 0 %}" class="btn btn-sm btn-primary">View product</a>
+                </div>
+            </div>
         </div>
-      </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 </div>
 
 {% include 'footer.html' %}
 
-<!-- JavaScript for Image Preview -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 {% if messages %}
 {% for msg in messages %}
@@ -95,41 +110,37 @@
         text: "{{msg}}",
         className: "info",
         style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: "linear-gradient(to right, #0a4322, #567253)",
         }
-      }).showToast();
-    </script>
-    {% endfor %}
-    {% endif %}
-    <!-- ----------- -->
-    <script>
-  // Select the main image and thumbnails
-  const mainImage = document.querySelector('.main-image');
-  const thumbnails = document.querySelectorAll('.thumbnail');
-
-  // Add click event listeners to each thumbnail
-  thumbnails.forEach(thumbnail => {
-    thumbnail.addEventListener('click', () => {
-      const src = thumbnail.getAttribute('src'); // Get the clicked image src
-      mainImage.setAttribute('src', src); // Update the main image src
-    });
-  });
- 
-
-let quantity = 1;
-
-function increaseQuantity() {
-    quantity++;
-    document.getElementById('quantity').value = quantity; // Update input value
-}
-
-function decreaseQuantity() {
-    if (quantity > 1) {
-        quantity--;
-        document.getElementById('quantity').value = quantity; // Update input value
-    }
-}
-
+    }).showToast();
 </script>
+{% endfor %}
+{% endif %}
+<script>
+    // Select the main image and thumbnails
+    const mainImage = document.querySelector('.main-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
 
+    // Add click event listeners to each thumbnail
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+            const src = thumbnail.getAttribute('src');
+            mainImage.setAttribute('src', src);
+        });
+    });
+
+    let quantity = 1;
+
+    function increaseQuantity() {
+        quantity++;
+        document.getElementById('quantity').value = quantity;
+    }
+
+    function decreaseQuantity() {
+        if (quantity > 1) {
+            quantity--;
+            document.getElementById('quantity').value = quantity;
+        }
+    }
+</script>
 {% endblock %}

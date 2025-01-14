@@ -12,10 +12,11 @@
 <nav class="navbar" style=" background-color:rgb(249, 247, 247)">
   <div class="container-fluid">
     <a class="navbar-brand"><b>Admin Panel</b></a>
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
+    <form  class="d-flex" role="search" action="{% url 'vendor_side' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+    <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
   </div>
 </nav>
 
@@ -57,11 +58,14 @@
         {% if  user.vendor_id.is_staff == False %}
          <a href="{% url 'vender_approval' user.id %}"><button type="button" class="btn btn-warning me-2">Pending</button></a>
         {% endif %}
-        <button type="button" class="btn btn-primary">Details</button>
+        <a href="{% url 'v_details' user.id %}"><button type="button" class="btn btn-primary">Details</button></a>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+
+
+
 
 {% endblock %}

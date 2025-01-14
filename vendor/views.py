@@ -7,9 +7,17 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required,user_passes_test
 from .forms import *
 from .models import *
+import datetime
+from django.db.models import F, Sum,Count
 from customer.models import *
 from django.utils.text import slugify
 from user_management.models import *
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from lushaura.settings import PDFKIT_CONFIG
+import pdfkit
+import pandas as pd
+from io import BytesIO
 # Create your views here.
 
 
@@ -160,6 +168,7 @@ def product_update(request,product_id):
         'product_subname':product.product_subname,
         'description'  :product.description,
         'price'  : product.price,
+        'offer_price'  : product.offer_price,
         'quantity':product.quantity,
         'brand_name':product.brand_name,
         'product_size':product.product_size,
@@ -199,7 +208,11 @@ def block_product(request,product_id,status):
 def order_list(request):
     user = get_object_or_404(User,id=request.user.id)
     vendor = get_object_or_404(Vendor_profile,vendor_id = user)
-    orders = Order.objects.filter(vendor=vendor)
+    if request.method == 'POST':
+        status=request.POST.get('search')
+        orders=Order.objects.filter(vendor=vendor,order_status__icontains=status)
+    else:
+       orders = Order.objects.filter(vendor=vendor)
     context={
         'orders' : orders
     }
@@ -209,13 +222,213 @@ def order_list(request):
 @login_required(login_url='v_login')
 def order_details(request,order_id):
     detail = get_object_or_404(Order,id=order_id)
-    
+    if detail.order_status == "Return":
+        return_details=get_object_or_404(Return_product,order=detail)
+    else:
+       return_details=0 
     if request.method == 'POST':
        status = request.POST.get('status')
+       if status == 'Cancelled':
+        Wallet=wallet(customer=detail.customer,vendor=detail.vendor,product=detail.product,total_amount=detail.total_amount,status='refund')
+        Wallet.save()
+        payment_status=get_object_or_404(Payment,payment_id=detail.Payment.payment_id)
+        payment_status.status='refund'
+        payment_status.save()
+       elif status == 'Delivered':
+        payment_status=get_object_or_404(Payment,payment_id=detail.Payment.payment_id)
+        payment_status.status='done'
+        payment_status.save()
+       elif status == 'Returned':
+        return_product=get_object_or_404(Return_product,order=detail)
+        return_product.delete()
+        Wallet=wallet(customer=detail.customer,vendor=detail.vendor,product=detail.product,total_amount=detail.total_amount,status='refund')
+        Wallet.save()
+        payment_status=get_object_or_404(Payment,payment_id=detail.Payment.payment_id)
+        payment_status.status='refund'
+        payment_status.save()
+          
        detail.order_status = status
        detail.save()
+       
     context={
        'detail': detail,
+       'return_details':return_details
        
     }
     return render(request,'vendor/order_detail.html',context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='v_login')
+def sales_report(request):
+    user = get_object_or_404(User,id=request.user.id)
+    vendor=get_object_or_404(Vendor_profile,vendor_id=user)
+    order_product=Order.objects.filter(vendor=vendor)
+    if order_product.exists():
+     try:
+       sell_product=order_product.filter(Payment__status='done').annotate(cat_discount=Sum(F('quantity')*F('cat_offer')),coup_discount=Sum(F('quantity')*F('coupon_price')))
+       total_sell_amount=sell_product.aggregate(amount=Sum('total_amount'),count=Count('id'))
+       cat_discount=sell_product.aggregate(cdiscount=Sum('cat_discount'))
+       coup_discount=sell_product.aggregate(codiscount=Sum('coup_discount'))
+       total_sales_amount=total_sell_amount['amount']
+       total_sales_product=total_sell_amount['count']
+       total_discount=cat_discount['cdiscount']+coup_discount['codiscount']
+     except TypeError:
+         total_sales_amount =0
+         total_sales_product=0
+         total_discount=0
+     except Exception:
+         total_sales_amount =0
+         total_sales_product=0
+         total_discount=0
+    else:
+         order_product=0  
+    period='no'
+    type='all'      
+    if request.method=='POST':
+        today = datetime.date.today()
+        filter_period = request.POST.get('period')
+        status= request.POST.get('status')
+        if filter_period == 'Month':
+            current_month = today.month
+            if status == 'all':
+                order_product=order_product.filter(created_at__month=current_month)
+                period='month'
+            else:
+               order_product=order_product.filter(created_at__month=current_month,order_status__icontains=status)
+               period='month'
+               type=status
+        elif filter_period == 'Year':
+            current_year = today.year
+            if status == 'all':
+                order_product=order_product.filter(created_at__year=current_year)
+                period='year'
+            else:
+                order_product=order_product.filter(created_at__year=current_year,order_status__icontains=status)
+                period='year'
+                type=status
+        if filter_period == 'Day':
+            current_day = today.day
+            if status == 'all':
+                period='day'
+                order_product=order_product.filter(created_at__day=current_day)
+            else:
+              period='day'
+              order_product=order_product.filter(created_at__day=current_day,order_status__icontains=status)
+              type=status
+        print(order_product)
+        if order_product.exists():
+            pass
+        else:
+            order_product=0
+    context={
+        'order_product':order_product,
+        'total_sales_amount': total_sales_amount,
+        'total_sales_product':total_sales_product,
+        'total_discount': total_discount,
+        'period':period,
+        'type':type
+    }
+    return render(request,'vendor/salesreport.html',context)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='v_login')
+def generate_pdf_view(request,period,type):
+    user = get_object_or_404(User,id=request.user.id)
+    vendor=get_object_or_404(Vendor_profile,vendor_id=user)
+    today = datetime.date.today()
+    if period == 'month':
+        current_month = today.month
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__month=current_month)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__month=current_month,order_status__icontains=type)
+    elif period == 'year':
+        current_year = today.year
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__year=current_year)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__year=current_year,order_status__icontains=type)
+    elif period == 'day':
+        current_day = today.day
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__day=current_day)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__day=current_day,order_status__icontains=type)
+    else:
+        order_product=Order.objects.filter(vendor=vendor)
+    # Render the HTML template with context
+    context = {'order_product': order_product,'period':period}
+    html_content = render_to_string('vendor/reportPdf.html', context)
+    
+    PDFKIT_OPTIONS = {
+    'page-size': 'A4',
+    'encoding': 'UTF-8',
+    'no-outline': None
+     }
+    # Generate the PDF
+    pdf = pdfkit.from_string(html_content, False,configuration=PDFKIT_CONFIG, options=PDFKIT_OPTIONS)
+
+    # Return the PDF as a downloadable file
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reportPdf.pdf"'
+
+    return response
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='v_login')
+def html_to_excel_view(request,period,type):
+    user = get_object_or_404(User,id=request.user.id)
+    vendor=get_object_or_404(Vendor_profile,vendor_id=user)
+    today = datetime.date.today()
+    if period == 'month':
+        current_month = today.month
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__month=current_month)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__month=current_month,order_status__icontains=type)
+    elif period == 'year':
+        current_year = today.year
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__year=current_year)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__year=current_year,order_status__icontains=type)
+    elif period == 'day':
+        current_day = today.day
+        if type == 'all':
+            order_product=Order.objects.filter(vendor=vendor,created_at__day=current_day)     
+        else:
+            order_product=Order.objects.filter(vendor=vendor,created_at__day=current_day,order_status__icontains=type)
+    else:
+        order_product=Order.objects.filter(vendor=vendor)
+    # Example data to convert into an Excel file
+    data = [
+    {
+        "Order ID": order.id,
+        "Product Name": order.product.product_name, 
+        "Customer Name": order.customer.full_name,
+        "Unit price":order.product.price,
+        "Status":order.order_status,
+        "Quantity":order.quantity,
+        "Cat.offer":order.cat_offer,
+        "product offer":order.product_offer,
+        "coupon offer":order.coupon_price,
+        "Total Amount": order.total_amount,  
+    }
+    for order in order_product  
+   ]
+
+    # Convert data into a DataFrame
+    df = pd.DataFrame(data)
+
+    # Save the DataFrame to an Excel file in memory
+    buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+
+    # Create an HTTP response with the Excel file
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename="data.xlsx"'
+
+    return response

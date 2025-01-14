@@ -23,11 +23,10 @@
         <!-- Left Section: Links -->
         <div class="col-md-4 side-links">
             <h4 class="text-secondary">Navigation</h4><br>
-            <a class="link" href="">Dashboard</a>
+            <a href="{% url 'v_home'%}" class="link" href="">Dashboard</a>
+
             <hr>
-            <a class="link" href="">My Orders</a>
-            <hr>
-            <a class="link" href="">Account Settings</a>
+            <a class="link" href="{% url 'vendor:sales_report' %}">Sales Report</a>
             <hr>
            
         </div>

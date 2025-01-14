@@ -1,11 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
+from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 # Create your models here.
 
 # user model class and it manager class 
 # ------------------------->
     #   user model manager class
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email,username, password=None, **extra_fields):
         if not email:
@@ -119,6 +122,7 @@ class Vendor_profile(models.Model):
 class Category(models.Model):
     name=models.CharField(max_length=20,null=False)
     slug = models.SlugField(unique=True, blank=True)
+    offer_price=models.DecimalField(max_digits=10, decimal_places=2,default=0)
     desc=models.CharField(max_length=100)
     delete = models.BooleanField(default=False)
     
@@ -129,7 +133,26 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
-# ----------- category model class closed-------------->   
+# ----------- category model class closed-------------->  
+
+class Coupon(models.Model):
+    coupon_name = models.CharField(_("Coupon Name"), max_length=100)
+    coupon_id = models.CharField(_("Coupon ID"), max_length=50, unique=True)
+    offer_price = models.DecimalField(_("Offer Price"), max_digits=10, decimal_places=2)
+    min_buy_price = models.DecimalField(_("Minimum Buy Price"), max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    quantity =  models.IntegerField(default=1)
+    validity_date = models.IntegerField()
+    validity = models.DateTimeField(_("Validity"),null=True)
+
+    class Meta:
+        verbose_name = "Coupon"
+        verbose_name_plural = "Coupons"
+
+    def __str__(self):
+        return f"{self.coupon_name} ({self.coupon_id})"
+    
+    
       
     
     

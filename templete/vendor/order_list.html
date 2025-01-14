@@ -13,17 +13,17 @@
 <nav class="navbar seccond_nav" style=" background-color:rgb(249, 247, 247)">
     <div class="container-fluid">
       <a class="navbar-brand text-secondary">Order List</a>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <form  class="d-flex" role="search" action="{% url 'vendor:order_list' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
     </div>
   </nav>
   
  
 
   <div class="container mt-0">
-    <h4 class="mb-4">Order Listing</h4>
     <div class="table-responsive">
         <table class="table table-hover">
             <thead class="table-dark">
@@ -63,6 +63,12 @@
                   {% if order.order_status == 'Confirmed' %}
                   <td><span class="badge bg-info">Confirmed</span></td>
                   {% endif %}
+                  {% if order.order_status == 'Return' %}
+                  <td><span class="badge bg-danger">Return</span></td>
+                  {% endif %}
+                  {% if order.order_status == 'Returned' %}
+                  <td><span class="badge bg-danger ">Returned</span></td>
+                  {% endif %}
                   
                     <td><a href="{% url 'vendor:order_detail' order.id %}" class="btn btn-primary btn-sm">Details</a></td>
                 </tr>
@@ -72,11 +78,8 @@
             </tbody>
         </table>
     </div>
+    
 </div>
-
-
-
-
 
 
 <!-- Toastify JS -->

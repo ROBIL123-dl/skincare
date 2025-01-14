@@ -10,10 +10,6 @@
  <nav class="navbar" style="background-color:rgb(249, 247, 247)">
     <div class="container-fluid">
       <a class="navbar-brand"><b>Admin Panel</b></a>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </nav>
 
@@ -58,17 +54,24 @@
         <form action="{% url 'category' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
           <div class="mb-3">
-            <label for="categoryName" class="form-label">Category Name</label>
+            <b><label for="categoryName" class="form-label">Category Name</label></b>
             {{form.name}}
             {{from.name.error}}
           </div>
           <div class="mb-3">
-            <label for="categoryDesc" class="form-label">Description</label>
+            
+            <b><label for="categoryName" class="form-label">offer_price</label></b><br>
+            <small>please offer price above '0' or '0',Otherwise error is occur. </small>
+            {{form.offer_price}}
+            {{from.offer_price.error}}
+          </div>
+          <div class="mb-3">
+            <b><label for="categoryDesc" class="form-label">Description</label></b>
             {{form.desc}}
             {{form.desc.error}}
           </div>
-          <button type="submit" class="btn btn-primary">Create</button>
-        </form>
+          <button type="submit" class="btn btn-success">Create</button>
+        </form><br>
       </div>
     </div>
   </div>

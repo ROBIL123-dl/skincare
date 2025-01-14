@@ -6,7 +6,7 @@ urlpatterns = [
    #customer side
    path('signup',views.Customer_sign_up,name='signup'),
    path('Customer_login/',views.Customer_login,name='c_login' ),
-   path('customer_home/',views. Customer_home_page,name='c_home' ),
+   path('customer_home/<int:product_id>/',views. Customer_home_page,name='c_home' ),
    
    #vendeor side
     path('vendor_login/',views.Vendor_login,name='v_login' ),
@@ -15,9 +15,10 @@ urlpatterns = [
    
    #admin side
    path('admin_log/',views.Admin_login,name='admin_log' ),
-   path('admin_home/',views.Admin_home_page,name='admin_home' ),
+   path('admin_home/',views.Admin_home_page,name='admin_home'),
    path('customer_side/', views.Customer_side,name='customer_side' ),
    path('vendor_side/', views.Vendor_side,name='vendor_side' ),
+   path('vendor_details/<int:vendor_id>/',views.vendor_details,name='v_details'),
    path('Block_customer/<int:user_id>/',views.Block_customer,name='Block_customer'),
    path('UnBlock_customer/<int:user_id>/',views.UnBlock_customer,name='UnBlock_customer'),
    path('Block_vendor/<int:user_id>/',views.Block_vendor,name='Block_vendor'),
@@ -28,14 +29,18 @@ urlpatterns = [
    path('category/', views.category, name='category' ),
    path('del_category/<int:cat_id>/',views.delete_category,name='del_category'),
    path('update_category/<int:cat_id>/',views.update_category,name='update_category'),
+   path('product_listing/<int:product_id>/<str:status>/', views.product_listing, name='products' ),
 
    # dependencies
-   path('verify_otp/<int:user_id>/',views.otp_verify,name='verify_otp'),
-   path('reset_otp/<int:user_id>/',views.reset_otp,name='reset_otp'),
+   path('verify_otp/<int:user_id>/<str:status>/',views.otp_verify,name='verify_otp'),
+   path('email_auth/',views.email_auth,name='email_auth'),
+    path('forgot_password/<int:user_id>/',views.forgot_password,name='forgot_password'),
+   path('reset_otp/<int:user_id>/<str:status>/',views.reset_otp,name='reset_otp'),
    path('logout/',views.logout,name='logout' ),
    # path('forgot_password/',views.forgot_password,name='forgot' ),
    
-  
+   path('coupon/',views.coupon,name='coupon' ),
+   path('delete_coupon/<int:coupon_id>/',views.delete_coupon,name='delete_coupon' ),
 ]
   
   

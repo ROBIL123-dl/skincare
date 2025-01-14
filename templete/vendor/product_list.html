@@ -59,10 +59,6 @@
 <nav class="navbar seccond_nav" style=" background-color:rgb(249, 247, 247)">
     <div class="container-fluid">
       <a class="navbar-brand text-secondary">Product List</a>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </nav>
 <div class="container">
@@ -99,6 +95,11 @@
                     <span class="text-warning">Unblocked</span>
                     {% else %} | 
                     <span class="text-danger">blocked</span>
+                    {% endif %}
+                </p>
+                <p>
+                    {% if product.admin_status == False %}
+                    <span class="text-danger">Admin blocked the Product................ !</span>
                     {% endif %}
                 </p>
             </div>

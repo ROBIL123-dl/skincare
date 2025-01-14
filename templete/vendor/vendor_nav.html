@@ -18,11 +18,28 @@
                     <b><a class="nav-link" href="">Customers</a></b>
                 </li> -->
             </ul>
-
+            <div>
+                {% if detail.order_status == "Pending" %}
+              <span class="badge bg-warning text-dark">Pending</span>
+             {% endif %}
+             {% if detail.order_status == 'Delivered' %}
+             <span class="badge bg-success">Delivered</span>
+            {% endif %}
+       
+            {% if detail.order_status == 'Shipping' %}
+            <span class="badge bg-info">Shipped</span>
+            {% endif %}
+            {% if detail.order_status == 'Cancelled' %}
+            <span class="badge bg-danger">Cancelled</span>
+            {% endif %}
+            {% if detail.order_status == 'Confirmed' %}
+            <span class="badge bg-info">Confirmed</span>
+            {% endif %}
+                </div>
             <!-- Right side -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link icon-btn " href="" title="Dashboard">Dashboard</a>
+                    <a class="nav-link icon-btn " href="{% url 'v_home'%}" title="Dashboard">Dashboard</a>
                 </li>
                 
                 <li class="nav-item">

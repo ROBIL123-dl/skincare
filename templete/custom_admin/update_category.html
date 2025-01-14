@@ -4,6 +4,8 @@
 {% block link_Ablock %}
 <link rel="stylesheet" href="{% static 'admin/nav.css' %}">
 <link rel="stylesheet" href="{% static 'admin/custmor.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 {% endblock %}
 
 {% block Abody_content %}
@@ -17,23 +19,27 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card shadow">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-success text-white">
           <h5 class="mb-0">Edit Category</h5>
         </div>
         <div class="card-body">
           <form action="{% url 'update_category' category.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="categoryName" class="form-label">Category Name</label>
+              <b><label for="categoryName" class="form-label">Category Name</label></b>
               <input type="text" name="name" class="form-control" id="categoryName" value="{{ category.name }}" placeholder="Enter category name" required>
             </div>
             <div class="mb-3">
-              <label for="categoryDesc" class="form-label">Description</label>
+              <b><label for="categoryName" class="form-label">Category offer</label></b>
+              <input type="number" name="offer" class="form-control" id="categoryName" value="{{ category.offer_price }}" placeholder="Enter offer price" required>
+            </div>
+            <div class="mb-3">
+              <b><label for="categoryDesc" class="form-label">Description</label></b>
               <textarea name="desc" class="form-control" id="categoryDesc" rows="3" placeholder="Enter category description" required>{{ category.desc }}</textarea>
             </div>
             <div class="d-flex justify-content-between">
              
-              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="submit" class="btn btn-success">Update</button>
             </div>
           </form>
         </div>
@@ -41,6 +47,19 @@
     </div>
   </div>
 </div>
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+{% if messages %}
+{% for msg in messages %}
+<script>
+    Toastify({
+        text: "{{msg}}",
+        className: "info",
+        style: {
+            background: "linear-gradient(to right, #0a4322, #567253)",
+        }
+    }).showToast();
+</script>
+{% endfor %}
+{% endif %}
 
     {% endblock %}
