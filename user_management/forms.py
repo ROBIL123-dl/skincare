@@ -212,7 +212,7 @@ class CategoryForm(forms.ModelForm):
         
     def clean_offer_price(self):
         offer_price = self.cleaned_data.get('offer_price')
-        if offer_price <= 0:
+        if offer_price < 0:
             raise forms.ValidationError("Price must be greater than zero.")
         return offer_price
 #closed 
