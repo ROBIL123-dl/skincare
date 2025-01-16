@@ -99,10 +99,11 @@ class address_form(forms.ModelForm):
             raise forms.ValidationError("Pincode must be exactly 6 digits!")
         return pincode
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data.get('phone_number')
-        if len(str(phone_number)) != 10:
-            raise forms.ValidationError("Phone number must be 10 digits long!")
+    # def clean_phone_number(self):
+    #     phone_number = self.cleaned_data.get('phone_number')
+    #     print(phone_number)
+    #     if len(str(phone_number)) != 10:
+    #         raise forms.ValidationError("Phone number must be 10 digits long!")
         
 
     def clean_country(self):
@@ -120,6 +121,7 @@ class address_form(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
+    
 class password_form(forms.ModelForm):
     
     class Meta:
