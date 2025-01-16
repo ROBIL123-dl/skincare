@@ -142,8 +142,8 @@ class ProductForm(forms.ModelForm):
         product_name = self.cleaned_data.get('product_name')
 
         # Regex to validate the product name (alphanumeric and spaces allowed)
-        if not re.match(r'^[A-Za-z0-9 ]+$', product_name):
-            raise forms.ValidationError("Product name can only contain letters, numbers, and spaces.")
+        if not re.match(r'^[\s\S]+$', product_name):
+          raise forms.ValidationError("Product name can only contain letters, numbers, spaces, and special characters.")
 
         return product_name
 
@@ -163,7 +163,7 @@ class ProductForm(forms.ModelForm):
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
-        if quantity > 0:
+        if quantity < 0:
             raise forms.ValidationError("Quantity must be greater than to zero.")
         return quantity
 
