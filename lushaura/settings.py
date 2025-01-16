@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
 import pdfkit
 from pathlib import Path
 from environ import Env
@@ -17,18 +18,17 @@ Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-WKHTMLTOPDF_CMD = r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
+WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
 PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
+print(env('SECRET_KEY'),env('DEBUG'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY =  env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG',default=False)
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['54.83.76.20', '0.0.0.0','lurashura.fun']
 SITE_ID=env.int('SITE_ID')
 
 # Application definition
@@ -99,7 +99,7 @@ DATABASES = {
     'default': {
        'ENGINE':'django.db.backends.postgresql',
         'NAME': env('NAME'),     
-        'USER': env('USER'),         #env varible for database connection
+        'USER': 'postgres',         #env varible for database connection
         'PASSWORD':env('PASSWORD'),    
         'HOST':env('HOST'),             
         'PORT':env('PORT'),
@@ -154,7 +154,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [           # env varible for static folders
     BASE_DIR/"static"
