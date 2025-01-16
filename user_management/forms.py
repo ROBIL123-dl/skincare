@@ -96,8 +96,8 @@ class User_registretion(forms.ModelForm):
                                       username=user_name,
                                       email=email,
                                       password=password,
-                                      is_active=True,
-                                      is_staff= True,
+                                      is_active=False,
+                                      is_staff= False,
                                       Role = role
                                       )
         else:
@@ -105,7 +105,7 @@ class User_registretion(forms.ModelForm):
                                       username=user_name,
                                       email=email,
                                       password=password,
-                                      is_active=True,
+                                      is_active=False,
                                       is_staff= False,
                                       Role = role
                                       )
@@ -158,7 +158,6 @@ class customerLogin(forms.Form):
     
     email_id=forms.EmailField(
         
-                 max_length=20,
                  label="Email Id",
                  required=True,
                  widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter your email id'}),
