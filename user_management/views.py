@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.views.decorators.cache import cache_control
 from django.db import IntegrityError
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth import authenticate, login,logout as authlogout
 from django.shortcuts import get_object_or_404
@@ -416,6 +417,13 @@ def Customer_login(request):
       if form.is_valid():
             email = form.cleaned_data.get('email_id')
             password = form.cleaned_data.get('password')
+            try:
+              user=User.objects.get(email=email)
+              if user.is_active == False:
+                messages.error(request," Admin blocked your access !")
+                return redirect('v_login')
+            except User.DoesNotExist:
+               pass
             user = authenticate(email=email, password=password)
             if user is not None:
              if user.Role == 1 and user.is_active == True:
@@ -519,6 +527,13 @@ def Vendor_login(request):
       if form.is_valid():
             email = form.cleaned_data.get('email_id')
             password = form.cleaned_data.get('password')
+            try:
+              user=User.objects.get(email=email)
+              if user.is_active == False:
+                messages.error(request," Admin blocked your access !")
+                return redirect('v_login')
+            except User.DoesNotExist:
+               pass
             vendor=authenticate(email=email, password=password)
             if vendor is not None:
               if vendor.Role == 2 and vendor.is_active == True :
@@ -686,6 +701,8 @@ def otp_verify(request,user_id,status):
           user.save()
           return redirect('forgot_password',user.id)
         if user.Role == 1:
+           user.is_active=True
+           user.save()
            return redirect('c_login')
         elif user.Role == 2:
            return redirect('v_login')
