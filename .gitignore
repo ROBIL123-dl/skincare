@@ -9,14 +9,12 @@ __pycache__/
 # Django-related
 *.log
 db.sqlite3
-
+.media/
+/media/
 # Environment variables
 .env
 
 # Static and media files
-/static/
-.media/
-/media/
 
 # IDE files
 .vscode/

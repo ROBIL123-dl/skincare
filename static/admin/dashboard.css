@@ -1,0 +1,67 @@
+:root {
+    --primary-color: #0a4322;
+    --secondary-color: #567253;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.overview-card {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.stats-card {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.vendor-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.card-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.badge {
+    font-size: 0.9rem;
+}
+
+.list-group-item {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
+
