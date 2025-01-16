@@ -146,10 +146,6 @@ class Vendor_license(forms.ModelForm):
         phone_number = self.cleaned_data.get('phone_number')
         if len(str(phone_number)) != 10:
             raise forms.ValidationError("Phone number must be 10 digits long!")
-        if len(set(phone_number)) == 1:  
-           raise forms.ValidationError("Phone number cannot consist of the same digit repeated!")
-        if not phone_number.isdigit():
-             raise forms.ValidationError("Phone number must contain only digits!")
         return phone_number
     
     class Meta:
