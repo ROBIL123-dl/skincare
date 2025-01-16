@@ -163,7 +163,7 @@ class ProductForm(forms.ModelForm):
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
-        if quantity < 0:
+        if quantity <= 0:
             raise forms.ValidationError("Quantity must be greater than to zero.")
         return quantity
 
