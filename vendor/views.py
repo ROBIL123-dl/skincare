@@ -266,12 +266,18 @@ def sales_report(request):
     if order_product.exists():
      try:
        sell_product=order_product.filter(Payment__status='done').annotate(cat_discount=Sum(F('quantity')*F('cat_offer')),coup_discount=Sum(F('quantity')*F('coupon_price')))
-       total_sell_amount=sell_product.aggregate(amount=Sum('total_amount'),count=Count('id'))
-       cat_discount=sell_product.aggregate(cdiscount=Sum('cat_discount'))
-       coup_discount=sell_product.aggregate(codiscount=Sum('coup_discount'))
-       total_sales_amount=total_sell_amount['amount']
-       total_sales_product=total_sell_amount['count']
-       total_discount=cat_discount['cdiscount']+coup_discount['codiscount']
+       if sell_product.exists():
+           total_sell_amount=sell_product.aggregate(amount=Sum('total_amount'),count=Count('id'))
+           cat_discount=sell_product.aggregate(cdiscount=Sum('cat_discount'))
+           coup_discount=sell_product.aggregate(codiscount=Sum('coup_discount'))
+           total_sales_amount=total_sell_amount['amount']
+           total_sales_product=total_sell_amount['count']
+           total_discount=cat_discount['cdiscount']+coup_discount['codiscount']
+       else:
+           total_sales_amount=0
+           total_sales_product=0
+           total_discount=0
+   
      except TypeError:
          total_sales_amount =0
          total_sales_product=0
@@ -281,7 +287,10 @@ def sales_report(request):
          total_sales_product=0
          total_discount=0
     else:
-         order_product=0  
+        order_product=0 
+        total_sales_amount=0
+        total_sales_product=0
+        total_discount=0 
     period='no'
     type='all'      
     if request.method=='POST':
