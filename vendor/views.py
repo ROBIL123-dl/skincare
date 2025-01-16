@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required,user_passes_test
 from .forms import *
 from .models import *
-import datetime
+from datetime import date
 from django.db.models import F, Sum,Count
 from customer.models import *
 from django.utils.text import slugify
@@ -287,14 +287,12 @@ def sales_report(request):
          total_sales_product=0
          total_discount=0
     else:
-        order_product=0 
-        total_sales_amount=0
-        total_sales_product=0
-        total_discount=0 
+        messages.error(request,'You have no orders ,So you haven,t sales report')
+        return redirect('vendor:vendorprofile')
     period='no'
     type='all'      
     if request.method=='POST':
-        today = datetime.date.today()
+        today = date.today()
         filter_period = request.POST.get('period')
         status= request.POST.get('status')
         if filter_period == 'Month':
@@ -340,10 +338,10 @@ def sales_report(request):
     return render(request,'vendor/salesreport.html',context)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='v_login')
-def generate_pdf_view(request,period,type):
+def generate_pdf_view(request,period,type): 
     user = get_object_or_404(User,id=request.user.id)
     vendor=get_object_or_404(Vendor_profile,vendor_id=user)
-    today = datetime.date.today()
+    today = date.today()
     if period == 'month':
         current_month = today.month
         if type == 'all':
@@ -387,7 +385,7 @@ def generate_pdf_view(request,period,type):
 def html_to_excel_view(request,period,type):
     user = get_object_or_404(User,id=request.user.id)
     vendor=get_object_or_404(Vendor_profile,vendor_id=user)
-    today = datetime.date.today()
+    today = date.today()
     if period == 'month':
         current_month = today.month
         if type == 'all':
