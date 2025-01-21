@@ -420,7 +420,7 @@ def Customer_login(request):
               user=User.objects.get(email=email)
               if user.is_active == False:
                 messages.error(request," Admin blocked your access !")
-                return redirect('v_login')
+                return redirect('c_login')
             except User.DoesNotExist:
                pass
             user = authenticate(email=email, password=password)

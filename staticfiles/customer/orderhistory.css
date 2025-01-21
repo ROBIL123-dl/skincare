@@ -1,0 +1,83 @@
+:root {
+    --primary-color: #0a4322;
+    --secondary-color: #567253;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+}
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+.navbar {
+    background-color: var(--primary-color);
+}
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+.seccond_nav {
+    background-color: var(--secondary-color) !important;
+}
+.seccond_nav .navbar-brand {
+    color: #fff !important;
+}
+.btn-outline-success {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline-success:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.order-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.order-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+}
+.product-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.status-badge {
+    font-size: 0.9rem;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+}
+.cancel-btn {
+    transition: all 0.3s ease;
+    border-radius: 20px;
+}
+.cancel-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+.card-title {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.text-muted {
+    color: var(--secondary-color) !important;
+}
+.footer {
+    margin-bottom: 0;
+    background-color: var(--primary-color);
+    color: #fff;
+}
+@media (max-width: 768px) {
+    .order-card .row {
+        flex-direction: column;
+    }
+    .order-card .col-md-2,
+    .order-card .col-md-3 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+}

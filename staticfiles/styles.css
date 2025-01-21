@@ -1,0 +1,366 @@
+:root {
+    --primary-color:#0a4322;
+    --secondary-color: #218838;
+}
+
+.navbar {
+    background-color: var(--primary-color) !important;
+}
+.navbar-brand, .nav-link {
+    color:white !important;
+}
+.nav-link:hover {
+    color: #f8f9fa !important;
+}
+.carousel-item {
+    height: 400px;
+}
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+
+.carousel-caption {
+    background-color:#567253;
+    padding: 20px;
+    border-radius: 10px;
+    bottom: 50%;
+    transform: translateY(50%);
+    width: 80%;
+    left: 10%;
+    right: 10%;
+}
+.btn-success {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-success:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+.brand-section {
+    background-color:#567253;
+    color:white;
+    padding: 1rem 0;
+    height:16em;
+}
+.brand_heading{
+  margin-top:1em;
+
+}
+.brand-item {
+  margin-top:4em;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+.brand-item img {
+    max-width: 60px;
+    height: auto;
+    margin-bottom: 0.25rem;
+}
+.brand-item p {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+
+/* Target the entire scrollbar */
+::-webkit-scrollbar {
+width: 5px; /* Width for vertical scrollbar */
+height: 2px; /* Height for horizontal scrollbar */
+}
+
+/* Scrollbar track (background) */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+border-radius: 10px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+background: #888;
+border-radius: 10px;
+}
+
+/* Scrollbar thumb when hovered */
+::-webkit-scrollbar-thumb:hover {
+background:#0a4322;
+}
+
+   
+.product-card {
+    min-width: 250px;
+    max-width: 250px;
+    margin-right: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+.product-image {
+    height: 150px;
+    object-fit: cover;
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.product-desc {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.product-price {
+    font-size: 1.3rem;
+    color:grey;
+}
+
+.rating i {
+    font-size: 1rem;
+}
+
+.actions button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+.btn{
+    background-color: #0a4322;
+    color: #f1f1f1;
+}
+.button{
+    background-color: #f8f9fa;
+}
+.seller-section {
+    background-color:#567253;
+    padding: 50px 0;
+    margin-top:7em;
+
+}
+.seller-section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #f8f9fa;
+}
+.seller-section p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color:whitesmoke;
+}
+.seller-section .btn {
+    padding: 10px 25px;
+    font-size: 1rem;
+}
+.seller-section.btn:hover{
+    background-color: #218838;
+}
+/* General Section Styling */
+.about-section {
+    padding: 50px 20px;
+    background-color: #e5e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  /* Container Flexbox */
+  .about-content {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+  }
+  
+  /* Text Content Styling */
+  .about-text {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  .about-text h2 {
+    font-size: 2rem;
+    color:#0a4322;
+    margin-bottom: 15px;
+  }
+  
+  .about-text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  /* Image Content Styling */
+  .about-image {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  .about-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .about-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .about-image {
+      order: -1; /* Move the image above the text */
+      margin-bottom: 20px;
+    }
+  
+    .about-text h2 {
+      font-size: 1.8rem;
+    }
+  
+    .about-text p {
+      font-size: 0.9rem;
+    }
+  }
+/* Footer General Styling */
+.footer {
+    background-color:#0a4322;
+    color: #c1bcbc;
+    padding: 40px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Footer Columns */
+  .footer-column {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color:rgb(244, 239, 239);
+  }
+  
+  .footer-column p,
+  .footer-column ul {
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  
+  .footer-column ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-column ul li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-column ul li a {
+    color: #e3e0e0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-column ul li a:hover {
+    color: #ff6a6a;
+  }
+  
+  /* Social Icons */
+  .social-icons a {
+    display: inline-block;
+    margin-right: 10px;
+    color: #c3c1c1;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    color: #979696;
+  }
+  
+  /* Footer Bottom Section */
+  .footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #f4f1f1;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .footer-column {
+      min-width: 100%;
+    }
+  
+    .social-icons {
+      justify-content: center;
+    }
+  }
+  
+  .testimonial-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.testimonial-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+.scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+.scroll-item {
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+}
+@media (min-width: 768px) {
+    .scroll-container {
+        overflow-x: visible;
+        white-space: normal;
+    }
+}

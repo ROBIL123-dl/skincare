@@ -1,0 +1,101 @@
+:root {
+    --primary-color: #0a4322;
+    --secondary-color: #567253;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+    background-color: var(--primary-color);
+}
+
+
+.navbar-brand {
+    color: white !important;
+}
+.heading{
+    background-color:var(--background-color);
+    color:gray;
+
+}
+.navbar-brand2{
+    color:gray ;
+    margin-top:2em;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.table {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(86, 114, 83, 0.1);
+}
+
+.icon-container {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    margin-right: 15px;
+}
+
+.icon-container i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(86, 114, 83, 0.25);
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(10, 67, 34, 0.25);
+}

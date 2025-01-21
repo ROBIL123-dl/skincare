@@ -1,0 +1,34 @@
+:root {
+    --primary-color: #0a4322;
+    --secondary-color: #567253;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+}
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+.navbar {
+    background-color: var(--primary-color);
+}
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+.card {
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
