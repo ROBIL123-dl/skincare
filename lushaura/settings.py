@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'lushaura.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE':'django.db.backends.postgresql',
-        'NAME': 'lushaura.db',     
+        'NAME': env('NAME'),     
         'USER': 'postgres',         #env varible for database connection
         'PASSWORD':env('PASSWORD'),    
         'HOST':env('HOST'),             
