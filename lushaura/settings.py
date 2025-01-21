@@ -28,7 +28,7 @@ SECRET_KEY =  env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG',default=False)
-ALLOWED_HOSTS = ['54.83.76.20', '0.0.0.0','lurashura.fun']
+ALLOWED_HOSTS = ['54.83.76.20', '0.0.0.0','lurashura.fun','www.lurashura']
 SITE_ID=env.int('SITE_ID')
 
 # Application definition
@@ -114,8 +114,8 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER') 
 EMAIL_HOST_PASSWORD =env('EMAIL_HOST_PASSWORD') 
 
-RAZORPAY_KEY_ID =env('RAZORPAY_KEY_ID')         # rasorpay integreation keys
-RAZORPAY_KEY_SECRET=env('RAZORPAY_KEY_SECRET')
+RAZORPAY_KEY_ID ='rzp_test_EJf0dXqL1Vhov0'       #env('RAZORPAY_KEY_ID')         # rasorpay integreation keys
+RAZORPAY_KEY_SECRET='6aNkHfwsj0DSqfaNQyiTpDXw'    #env('RAZORPAY_KEY_SECRET')
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY="same-orgin-allow-popups"
 # Password validation
