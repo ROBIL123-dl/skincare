@@ -98,8 +98,8 @@ WSGI_APPLICATION = 'lushaura.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE':'django.db.backends.postgresql',
-        'NAME': 'postgres',     
-        'USER': env('USER'),         #env varible for database connection
+        'NAME': 'lushaura.db',     
+        'USER': 'postgres',         #env varible for database connection
         'PASSWORD':env('PASSWORD'),    
         'HOST':env('HOST'),             
         'PORT':env('PORT'),
