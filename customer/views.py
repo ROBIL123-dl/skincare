@@ -34,7 +34,7 @@ from io import BytesIO
 
 # Create your views here.
 
-razorpay_client=razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+razorpay_client=razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECRET))
 
 #customer profile
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -180,8 +180,6 @@ def user_auth(request,user_id):
     if request.method == 'POST':
         email=request.POST.get('email')
         password=request.POST.get('password')
-        print(email,user.email)
-        print(password,user.password)
         if email == user.email and check_password(password,user.password):
             return redirect('customer:change_password',user_id=user.id)
         else:
@@ -195,9 +193,7 @@ def change_password(request,user_id):
      user = get_object_or_404(User,id=user_id)
      if request.method == 'POST':
          form = password_form(request.POST)
-         print(form.errors)
          if form.is_valid():
-           print('success')
            password = form.cleaned_data['password']  
            user.set_password(password)
            user.save()
@@ -288,23 +284,25 @@ def single_product(request,product_id,wishlist):
     customer=get_object_or_404(Customer_profile,customer_id=user.id)
     product = get_object_or_404(Products,id = product_id)
     category = Products.objects.filter(subcategory_id = product.subcategory_id)
+  
     if wishlist!=0:
+        print('inside the wishlist')
         try:
               product = get_object_or_404(Products, id=wishlist)
               wishlist_item = Wishlist.objects.filter(product=product,customer=customer)
-              if wishlist_item:
+              if wishlist_item.exists():
+                  print('product is in the wishlist')
                   messages.success(request, "Product already in the wishlist")
                   return redirect('customer:single_product',product_id,0)
-        except Wishlist.DoesNotExist:
-             try:
-                user = get_object_or_404(User, id=request.user.id)
-                customer = get_object_or_404(Customer_profile, customer_id=user)
-                new_wishlist = Wishlist(customer=customer, product=product)
-                new_wishlist.save()
-                messages.success(request, "Product added to wishlist")
-             except Exception as e:
-                 messages.error(request, f"An error occurred: {str(e)}")
-                 return redirect('customer:shop', 0)
+              else:
+                  user = get_object_or_404(User, id=request.user.id)
+                  customer = get_object_or_404(Customer_profile, customer_id=user)
+                  new_wishlist = Wishlist(customer=customer, product=product)
+                  new_wishlist.save()
+                  messages.success(request, "Product added to wishlist")
+        except Exception as e:
+                 messages.error(request, f"Invalid request ")
+                 return redirect('customer:single_product',product_id,0)
     context={
       'product' : product ,
       'category' : category
@@ -549,7 +547,7 @@ def place_order(request,cart_id,status):
                     if order.total_amount <= 1000:
                         order.save()
                         payment=Payment(user=customer,transaction_id=0,
-                               amount=order.total_amount,status="no",
+                               amount=order.total_amount,status="done",
                                vendor=carts.product_id.seller_id,payment_category='cash_on_delivery'
                                )
                         payment.save()
@@ -570,6 +568,7 @@ def place_order(request,cart_id,status):
             elif status == 'all_products_checkout':#multiple products
                amount=0
                carts = Cart.objects.filter(customer_id=customer.id)
+               print(carts)
                if carts.exists():
                  count=carts.aggregate(count=Count('id'))
                  if coupon_price>0:
@@ -640,6 +639,7 @@ def place_order(request,cart_id,status):
             elif status == 'all_products_checkout':# all product 
               carts = Cart.objects.filter(customer_id=customer.id)
               if carts.exists:
+                 object_count=0
                  count=carts.aggregate(count=Count('id'))
                  if coupon_price>0:
                    count=count['count']
@@ -661,6 +661,8 @@ def place_order(request,cart_id,status):
                      product.quantity = (product.quantity) - (cart.total_quantity)
                      product.save()
                      cart.delete()
+                  object_count+=1
+                 if len(carts) == object_count:
                   return redirect('customer:rasorpay',order.id,status)
               else:
                  return redirect('c_home')
@@ -778,7 +780,11 @@ def place_order(request,cart_id,status):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')
 def rasorpay(request,order_id,status):
-    if status =='single_product_checkout':
+    orders=get_object_or_404(Order,id=order_id)
+    if orders.Payment:
+        return redirect('customer:shop',0)
+    else:
+     if status =='single_product_checkout':
         orders=get_object_or_404(Order,id=order_id)
         amount=orders.total_amount+50
         amount_in_paise = int(amount) * 100  
@@ -791,14 +797,15 @@ def rasorpay(request,order_id,status):
                
             }
            )
-    if status == 'all_products_checkout':
+     if status == 'all_products_checkout':
+        print('inside the all products checkout ')
         user = get_object_or_404(User,id=request.user.id)
         customer = get_object_or_404(Customer_profile,customer_id=user.id)
         order=get_object_or_404(Order,id=order_id)
         current_time=order.created_at
-        print(f'currenttime:{current_time}')
         orders = Order.objects.filter(customer=customer,created_at=current_time)
-        print(orders)
+        for i in orders:
+          print(f'{i.product.product_name}')
         total_amount = orders.aggregate(total=Sum('total_amount'))
         amount = total_amount['total']+int(50)
         amount_in_paise = int(amount) * 100 
@@ -908,8 +915,7 @@ def order_history(request):
                 'delivery_date': delivery_date,
                 'expect_date': expect_date
             })
-    for i in orders:
-        print(f'payment:------{i.Payment}')
+   
     context={
         'orders':orders,
         'order_dates': order_dates
@@ -920,21 +926,28 @@ def order_history(request):
 @login_required(login_url='c_login')
 def order_cancel(request,order_id):
     order=get_object_or_404(Order,id=order_id)
-    
     product = get_object_or_404(Products,id=order.product.id)
     if order.Payment.payment_category == 'online_payment':
+        payment_status=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
         order.order_status = 'Cancelled'
-        order.Payment.status='no'
+        payment_status.status='refund'
+        payment_status.save()
         Wallet=wallet(customer=order.customer,vendor=order.vendor,product=product,total_amount=order.total_amount,status='refund')
         Wallet.save()
-        order.save()  
+        order.save() 
     elif order.Payment.payment_category == 'cash_on_delivery' :
-         order.order_status = 'Cancelled'
-         order.Payment.status='no'
-         order.save()
-    elif order.Payment.payment_category == 'Wallet':
+        payment_status=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
         order.order_status = 'Cancelled'
-        order.Payment.status='no'
+        payment_status.status='no'
+        payment_status.save()
+        Wallet=wallet(customer=order.customer,vendor=order.vendor,product=product,total_amount=order.total_amount,status='refund')
+        Wallet.save()
+        order.save() 
+    elif order.Payment.payment_category == 'Wallet':
+        payment_status=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
+        order.order_status = 'Cancelled'
+        payment_status.status='refund'
+        payment_status.save()
         Wallet=wallet(customer=order.customer,vendor=order.vendor,product=product,total_amount=order.total_amount,status='refund')
         Wallet.save()
         order.save()  
@@ -991,6 +1004,8 @@ def My_wallet(request):
 @login_required(login_url='c_login')
 def return_product(request,order_id):
     order=get_object_or_404(Order,id=order_id)
+    if order.order_status == 'Return' or order.order_status == 'Returned':
+        return redirect('customer:order_history')
     if request.method == 'POST':
         reason=request.POST.get('reason')
         ret=Return_product(customer=order.customer,order=order,reason=reason)

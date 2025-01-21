@@ -29,9 +29,9 @@
                     <span class="stars">★★★★★</span>
                     <span class="review-count">(128 reviews)</span>
                 </div>
-                <p class="product-price text-secondary">{{product.price}}</p>
+                <p class="product-price text-secondary">{{product.price}}-/<b style="color:rgb(236, 236, 65);">Rs</b></p>
                 {% if product.offer_ > 0 %}
-                <p class="product-price  text-secondary">Offer-{{product.offer_price}}</p>
+                <p class="product-price  text-secondary">Offer-{{product.offer_price}}-/<b style="color:rgb(187, 187, 93);">Rs</b></p>
                 {% endif %}
                 {% if product.quantity > 0 %}
                 <span class="badge bg-success">In Stock</span>

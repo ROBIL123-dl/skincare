@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import os
 import pdfkit
 from pathlib import Path
 from environ import Env
@@ -18,17 +17,18 @@ Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
+WKHTMLTOPDF_CMD = r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
 PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-print(env('SECRET_KEY'),env('DEBUG'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY =  env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG',default=False)
-ALLOWED_HOSTS = ['54.83.76.20', '0.0.0.0','lurashura.fun','www.lurashura']
+
+ALLOWED_HOSTS = []
 SITE_ID=env.int('SITE_ID')
 
 # Application definition
@@ -99,7 +99,7 @@ DATABASES = {
     'default': {
        'ENGINE':'django.db.backends.postgresql',
         'NAME': env('NAME'),     
-        'USER': 'postgres',         #env varible for database connection
+        'USER': env('USER'),         #env varible for database connection
         'PASSWORD':env('PASSWORD'),    
         'HOST':env('HOST'),             
         'PORT':env('PORT'),
@@ -114,7 +114,7 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER') 
 EMAIL_HOST_PASSWORD =env('EMAIL_HOST_PASSWORD') 
 
-RAZORPAY_KEY_ID ='rzp_test_EJf0dXqL1Vhov0'       #env('RAZORPAY_KEY_ID')         # rasorpay integreation keys
+RAZORPAY_KEY_ID ='rzp_test_EJf0dXqL1Vhov0'     #env('RAZORPAY_KEY_ID')         # rasorpay integreation keys
 RAZORPAY_KEY_SECRET='6aNkHfwsj0DSqfaNQyiTpDXw'    #env('RAZORPAY_KEY_SECRET')
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY="same-orgin-allow-popups"
@@ -154,7 +154,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [           # env varible for static folders
     BASE_DIR/"static"
@@ -192,3 +192,4 @@ SOCIALACCOUNT_LOGIN_ON_GET=True
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

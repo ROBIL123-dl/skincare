@@ -19,8 +19,7 @@ from .forms import *
 from .utils import *
 import json
 
-def is_user(user):
-    return user.is_authenticated == False
+
  
 #@user_passes_test(is_user)
 def index(request):
