@@ -17,7 +17,7 @@ Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-WKHTMLTOPDF_CMD = r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
+WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
 PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
