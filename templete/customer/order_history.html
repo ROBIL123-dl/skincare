@@ -22,6 +22,7 @@
     {% if orders %}
     {% for order in orders %}
     <div class="card mb-4 order-card">
+       <small style="margin-left:1em; color:#567253">ordered:-{{order.created_at}}</small>
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-2 text-center mb-3 mb-md-0">

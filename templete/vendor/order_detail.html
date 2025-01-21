@@ -114,11 +114,7 @@
                           <span class="badge bg-danger">Return</span>
                           {% endif %}
                         </div>
-                        {% if return_details %}
-                        <p class="mt-2">Return date: {{return_details.created_at}}</p>
-                        <p class="font-semibold mt-2">Reason for return product:</p>
-                        <p>{{return_details.reason}}</p>
-                        {% endif %}
+        
                             </div>
                         </div>
 
@@ -129,7 +125,7 @@
                                 <div class="text-secondary"><strong>Total Price:</strong> {{detail.total_amount}} Rs</div>
                             </div>
                         </div>
-
+                        {% if detail.Payment %}
                         {% if detail.order_status != 'Cancelled' and detail.order_status != 'Returned' %}
                         <form action="{% url 'vendor:order_detail' detail.id %}" method="post" class="mb-6">
                             {% csrf_token %}
@@ -137,10 +133,15 @@
                             <select class="form-select block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-primary-color focus:ring focus:ring-primary-color focus:ring-opacity-50" name="status" id="statusUpdate">
                                 <option selected>{{detail.order_status}}</option>
                                 {% if detail.order_status != 'Return' %}
-                                <option value="Pending">Pending</option>
+                                {% if detail.order_status == 'Confirmed' %}
                                 <option value="Shipping">Shipping</option>
+                                {% endif %}
+                                {% if detail.order_status == 'Pending' %}
                                 <option value="Confirmed">Confirmed</option>
+                                {% endif %}
+                                {% if detail.order_status == 'Shipping' %}
                                 <option value="Delivered">Delivered</option>
+                                {% endif %}
                                 <option value="Cancelled">Cancelled</option>
                                 {% endif %}
                                 {% if detail.order_status == 'Return' %}
@@ -150,6 +151,7 @@
                             <button type="submit" class="btn-primary mt-4 py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">Update Status</button>
                         </form>
                         {% endif %}
+                        {% endif %}
 
                         <div class="text-right">
                             <a href="{% url 'vendor:order_list' %}" class="btn-primary py-2 px-4 rounded inline-block transition duration-300 ease-in-out transform hover:scale-105">Back to Orders</a>
@@ -157,12 +159,18 @@
                         <div class="mt-6 bg-white rounded-lg p-4 shadow">
                             <h5 class="text-lg font-semibold mb-3">Payment Details</h5>
                             <hr>
+                            {% if detail.Payment %}
                             <!-- Add payment details here -->
                             <div class="text-secondary"><strong>Payment Method:</strong> {{detail.Payment.payment_category}}</div>
                             <div class="text-secondary"><strong>payment id:</strong> {{detail.Payment.transaction_id}}</div>
                             <div class="text-secondary"><strong>Payment amount:</strong> {{detail.Payment.amount}}/Rs</div>
                             <div class="text-secondary"><strong>Payment status:</strong> {{detail.Payment.status}}</div>
                             <div class="text-secondary"><strong>Payment Time:</strong> {{detail.Payment.created_at}}</div>
+                            {% else %}
+                            <div class="alert alert-secondary" role="alert">
+                                Payment failed !
+                              </div>
+                            {% endif %}
                         </div>
                     </div>
                    

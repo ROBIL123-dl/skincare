@@ -5,6 +5,7 @@ from customer.forms import *
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import *
 from .models import *
 from datetime import date
@@ -223,7 +224,9 @@ def order_list(request):
 def order_details(request,order_id):
     detail = get_object_or_404(Order,id=order_id)
     if detail.order_status == "Return":
-        return_details=get_object_or_404(Return_product,order=detail)
+          return_details = Return_product.objects.get(order=detail)
+    elif detail.order_status == "Returned":
+        return redirect('vendor:order_list')
     else:
        return_details=0 
     if request.method == 'POST':
