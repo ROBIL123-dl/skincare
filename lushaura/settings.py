@@ -28,7 +28,7 @@ SECRET_KEY =  env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG',default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['54.83.76.20','0.0.0.0','lurashura.fun','www.lurashura.fun']
 SITE_ID=env.int('SITE_ID')
 
 # Application definition
