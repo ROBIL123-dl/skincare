@@ -951,8 +951,6 @@ def order_cancel(request,order_id):
         order.order_status = 'Cancelled'
         payment_status.status='no'
         payment_status.save()
-        Wallet=wallet(customer=order.customer,vendor=order.vendor,product=product,total_amount=order.total_amount,status='refund')
-        Wallet.save()
         order.save() 
     elif order.Payment.payment_category == 'Wallet':
         payment_status=get_object_or_404(Payment,payment_id=order.Payment.payment_id)

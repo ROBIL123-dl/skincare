@@ -89,7 +89,7 @@
                 <div class="w-full md:w-1/2 px-4">
                     <div class="bg-white rounded-lg p-6 shadow mb-6">
                         <div class="flex justify-between items-center mb-4">
-                            <p><strong class="text-secondary">Order Date:</strong>{{ detail.created_at|date:"F Y d" }}/p>
+                            <p><strong class="text-secondary">Order Date:</strong>{{ detail.created_at|date:"F Y d" }}</p>
                             <div>
                                  {% if detail.order_status == "Pending" %}
                             <span class="badge bg-warning text-dark">Pending</span>
