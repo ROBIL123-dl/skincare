@@ -766,12 +766,13 @@ def place_order(request,cart_id,status):
             elif status =='single_product_checkout':
                  messages.error(request," No Wallet ")
                  return redirect('customer:single_product_checkout',cart_id)   
-           
+        state='none'
         context={
         'order_products' : order_products,
         'total_amount': total_amount,
         'payment':payment,
         'order':order,
+        'state':state
         }
       
         return render(request,'customer/place_order.html',context)
