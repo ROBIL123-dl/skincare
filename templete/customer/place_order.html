@@ -23,7 +23,7 @@
                 {% else %}
                 <h6>Payment method: <small>Cash on delivery</small></h6>
                 {% endif %}
-                <h6>Order Created time: <small>{{order.created_at}}</small></h6>
+                <h6>Order Created time: <small>{{ order.created_at|date:"F Y d" }}</small></h6>
             </div>
             <div class="table-container">
                 <div class="row mb-3 table-header py-2 d-none d-md-flex">
@@ -58,7 +58,7 @@
     </div> 
 
     <div class="mt-4 btn-container">
-        <a href="{% url 'customer:invoice' order.id %}" class="btn btn-outline-secondary">
+      <a href="{% url 'customer:invoice' order.id %}" class="btn btn-outline-secondary">
             <i class="fas fa-print me-2"></i>Invoice
         </a>
         <a href="{% url 'customer:shop' 0 %}" class="btn btn-confirm">

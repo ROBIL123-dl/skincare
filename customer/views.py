@@ -28,7 +28,7 @@ from django.http import JsonResponse
 import pytz
 from razorpay.errors import SignatureVerificationError
 from django.template.loader import render_to_string
-from lushaura.settings import PDFKIT_CONFIG
+# from lushaura.settings import PDFKIT_CONFIG
 import pdfkit
 from io import BytesIO
 
@@ -827,6 +827,7 @@ def rasorpay(request,order_id,status,state):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')
 def verify_payment(request,order_id,status):
+  
     if request.method == 'POST':
         user=get_object_or_404(User,id=request.user.id)
         customer=get_object_or_404(Customer_profile,customer_id=user)
@@ -846,6 +847,7 @@ def verify_payment(request,order_id,status):
                 'razorpay_signature': razorpay_signature
             })
             if status =='payment_failed':
+               print('enter inside the payment failed')
                order=get_object_or_404(Order,id=order_id)
                vendor=get_object_or_404(Vendor_profile,id=order.vendor.id)
                payment=Payment(user=customer,transaction_id=razorpay_payment_id,
@@ -855,7 +857,6 @@ def verify_payment(request,order_id,status):
                payment.save()
                order.Payment=payment
                order.save()
-                
             else: 
              for order in orders:
                vendor=get_object_or_404(Vendor_profile,id=order.vendor.id)
@@ -882,13 +883,14 @@ def verify_payment(request,order_id,status):
 @login_required(login_url='c_login')        
 def rasorpay_order_status(request,order_id,state):
     user=get_object_or_404(User,id = request.user.id)
-    customer=get_object_or_404(Customer_profile,customer_id=user)
-   
-    if state == 'payemnt_failed':
-       order_products = get_object_or_404(Order,id=order_id) 
-       payment=get_object_or_404(Payment,payment_id=order_products.Payment.payment_id) 
-       total_amount=order_products.total_amount
-       order=order_products
+    customer=get_object_or_404(Customer_profile,customer_id=user) 
+    if state == 'payment_failed':
+       print('enter in the failed block')
+       order = get_object_or_404(Order,id=order_id)
+       order_products = Order.objects.filter(id=order_id) 
+      
+       payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id) 
+       total_amount =order_products.aggregate(total=Sum('total_amount'))
     else:
       order = get_object_or_404(Order,id=order_id)
       current_time=order.created_at

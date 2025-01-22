@@ -23,7 +23,7 @@
                         <div class="transaction-details">
                             <span>{{wall.vendor.seller_name}}</span>
                             <b><span>{{wall.product.product_name}}</span></b>
-                            <span class="transaction-date">{{wall.created_at}}</span>
+                            <span class="transaction-date">{{ wall.created_at|date:"F Y d" }}</span>
                         </div>
                         <span>{{wall.total_amount}}-Rs/</span>
                         {% if wall.status == 'refund' %}
