@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,10 +66,19 @@
             background: #f8f8f8;
             padding: 15px 10px;
         }
+        .col {
+            flex: 1;
+            padding: 0 5px;
+        }
+        .col-2 {
+            flex: 2;
+        }
+        .col-3 {
+            flex: 3;
+        }
     </style>
 </head>
 <body>
-   
     <div class="container">
         <i style="color:#0a4322;">Lushaura</i>
         <div class="header">
@@ -80,12 +88,12 @@
 
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-4">Order details</4>
+                <h4 class="card-title mb-4">Order details</h4>
                 <div class="order-info">
-                    <h6>Name:{{order.customer.full_name}}</h6>
-                    <h6>Address:{{order.delivery_address}}</h6>
-                    <h6>pincode:{{order.pincode}}</h6>
-                    <h6>phone number:{{order.phone_number}}</h6>
+                    <h6>Name: {{order.customer.full_name}}</h6>
+                    <h6>Address: {{order.delivery_address}}</h6>
+                    <h6>Pincode: {{order.pincode}}</h6>
+                    <h6>Phone number: {{order.phone_number}}</h6>
                     {% if payment %}
                     <h6>Payment method: <small>{{ payment.payment_category }}</small></h6>
                     <h6>Transaction Id: <small>{{ payment.transaction_id }}</small></h6>
@@ -94,33 +102,34 @@
                     {% endif %}
                     <h6>Order Created time: <small>{{ order.created_at }}</small></h6>
                 </div>
-                <!-- <div class="table-container">
-                    <div class="row mb-3 table-header py-2 d-none d-md-flex">
-                        <div class="col-md-3">Product</div>
-                        <div class="col-md-1">Quantity</div>
-                        <div class="col-md-2">Product Offer</div>
-                        <div class="col-md-2">Category Offer</div>
-                        <div class="col-md-2">Coupon Offer</div>
-                        <div class="col-md-1">Price</div>
-                        <div class="col-md-1 text-end">Total</div>
-                    </div> -->
+               
+                <div class="table-container">
+                    <div class="row table-header">
+                        <div class="col-3">Product</div>
+                        <div class="col">Quantity</div>
+                        <div class="col">Product Offer</div>
+                        <div class="col">Category Offer</div>
+                        <div class="col">Coupon Price</div>
+                        <div class="col">Price</div>
+                        <div class="col">Total</div>
+                    </div>
                     {% for product in order_products %}
-                    <div class="row mb-3 py-2 border-bottom align-items-center">
-                        <div class="col-md-3 mb-2 mb-md-0">
+                    <div class="row border-bottom">
+                        <div class="col-3">
                             <div class="product-name">{{ product.product.product_name }}</div>
                             <div class="product-details d-md-none">Qty: {{ product.quantity }} x {{ product.product.price }}</div>
                         </div>
-                        <div class="col-md-1 ">Product Quantity:{{ product.quantity }}</div><br>
-                        <div class="col-md-2 ">Product Offer:{{ product.product_offer }}Rs/</div><br>
-                        <div class="col-md-2" >Product Offer:{{ product.cat_offer }}Rs/</div><br>
-                        <div class="col-md-2">Category Offer:{{ product.coupon_price }}Rs/</div><br>
-                        <div class="col-md-1">Price:{{ product.product.price }}-Rs/</div><br>
-                        <div class="col-md-1">Total:{{ product.total_amount }}-Rs/</div>
+                        <div class="col">{{ product.quantity }}</div>
+                        <div class="col">{{ product.product_offer }}Rs</div>
+                        <div class="col">{{ product.cat_offer }}Rs</div>
+                        <div class="col">{{ product.coupon_price }}Rs</div>
+                        <div class="col">{{ product.product.price }}Rs</div>
+                        <div class="col">{{ product.total_amount }}Rs</div>
                     </div>
                     {% endfor %}
-                    <div class="row total-row py-2">
-                        <div class="col-6 col-md-11 text-end">Total (including shipping(50/RS)):</div>
-                        <div class="col-6 col-md-1 text-end">{{ total_amount.total|add:50 }}-Rs/</div>
+                    <div class="row total-row">
+                        <div class="col-2 text-end">Total (including shipping(50/RS)):</div>
+                        <div class="col text-end">{{ total_amount.total|add:50 }}Rs</div>
                     </div>
                 </div>
             </div>
@@ -128,41 +137,3 @@
     </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
