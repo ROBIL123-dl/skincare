@@ -83,7 +83,7 @@
                         </a>
                     {% endif %}
                     {% else %}
-                    <a href="{% url 'customer:rasorpay' order.id 'single_product_checkout'  %}" class="btn btn-outline-danger btn-sm cancel-btn mt-2">
+                    <a href="{% url 'customer:rasorpay' order.id 'single_product_checkout' 'payment_failed'  %}" class="btn btn-outline-danger btn-sm cancel-btn mt-2">
                         <i class="fa-thin fa-money-check-pen"></i>Pay Now
                     </a>
                     <span class="badge bg-danger mt-2  status-badge">Payment failed..!</span>

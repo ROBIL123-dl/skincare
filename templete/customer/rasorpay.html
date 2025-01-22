@@ -55,7 +55,7 @@
             "order_id": "{{ order_id }}",  // Order ID from the server
             handler: function (response) {
                 // Send the response to your server for verification
-                fetch('/customer/verify_payment/{{order}}/', {
+                fetch('/customer/verify_payment/{{order}}/{{status}}/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@
                     // Handle the server response here
                     console.log(data);
                     if (data.message === "Payment verified successfully!") {
-                        window.location.href = "/customer/rasorpay_order_status/{{order}}/"; 
+                        window.location.href = "/customer/rasorpay_order_status/{{order}}/{{status}}/"; 
                         alert("Payment verification successful!");
                     } else {
                         alert("Payment verification failed!");

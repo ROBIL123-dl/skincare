@@ -663,7 +663,7 @@ def place_order(request,cart_id,status):
                      cart.delete()
                   object_count+=1
                  if len(carts) == object_count:
-                  return redirect('customer:rasorpay',order.id,status)
+                  return redirect('customer:rasorpay',order.id,status,'None')
               else:
                  return redirect('c_home')
         if int(paymethod) == 2: #wallet
@@ -779,7 +779,7 @@ def place_order(request,cart_id,status):
 #rasorpay
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')
-def rasorpay(request,order_id,status):
+def rasorpay(request,order_id,status,state):
     orders=get_object_or_404(Order,id=order_id)
     if orders.Payment:
         return redirect('customer:shop',0)
@@ -798,14 +798,11 @@ def rasorpay(request,order_id,status):
             }
            )
      if status == 'all_products_checkout':
-        print('inside the all products checkout ')
         user = get_object_or_404(User,id=request.user.id)
         customer = get_object_or_404(Customer_profile,customer_id=user.id)
         order=get_object_or_404(Order,id=order_id)
         current_time=order.created_at
         orders = Order.objects.filter(customer=customer,created_at=current_time)
-        for i in orders:
-          print(f'{i.product.product_name}')
         total_amount = orders.aggregate(total=Sum('total_amount'))
         amount = total_amount['total']+int(50)
         amount_in_paise = int(amount) * 100 
@@ -821,14 +818,15 @@ def rasorpay(request,order_id,status):
         "order_id": order["id"],
         "amount": amount,
         "key_id": settings.RAZORPAY_KEY_ID,
-         "order" :order_id
+         "order" :order_id,
+         "status":state
         }
     return render(request,'customer/rasorpay.html',context)
 
 #rasorpay payment verification
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')
-def verify_payment(request,order_id):
+def verify_payment(request,order_id,status):
     if request.method == 'POST':
         user=get_object_or_404(User,id=request.user.id)
         customer=get_object_or_404(Customer_profile,customer_id=user)
@@ -841,20 +839,26 @@ def verify_payment(request,order_id):
             razorpay_order_id = data.get('razorpay_order_id')
             razorpay_signature = data.get('razorpay_signature')
             
-            # Debug incoming data
-            print(f"Payment ID: {razorpay_payment_id}")
-            print(f"Order ID: {razorpay_order_id}")
-            print(f"Signature: {razorpay_signature}")
-            
             # Verify the signature
             razorpay_client.utility.verify_payment_signature({
                 'razorpay_order_id': razorpay_order_id,
                 'razorpay_payment_id': razorpay_payment_id,
                 'razorpay_signature': razorpay_signature
             })
-            for order in orders:
+            if status =='payment_failed':
+               order=get_object_or_404(Order,id=order_id)
                vendor=get_object_or_404(Vendor_profile,id=order.vendor.id)
-               print(vendor)
+               payment=Payment(user=customer,transaction_id=razorpay_payment_id,
+                               amount=order.total_amount,status="done",
+                               vendor=vendor,payment_category='online_payment'
+                               )
+               payment.save()
+               order.Payment=payment
+               order.save()
+                
+            else: 
+             for order in orders:
+               vendor=get_object_or_404(Vendor_profile,id=order.vendor.id)
                payment=Payment(user=customer,transaction_id=razorpay_payment_id,
                                amount=order.total_amount,status="done",
                                vendor=vendor,payment_category='online_payment'
@@ -876,17 +880,21 @@ def verify_payment(request,order_id):
 # rasorpay place order 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')        
-def rasorpay_order_status(request,order_id):
+def rasorpay_order_status(request,order_id,state):
     user=get_object_or_404(User,id = request.user.id)
     customer=get_object_or_404(Customer_profile,customer_id=user)
-    order = get_object_or_404(Order,id=order_id)
-    current_time=order.created_at
-    order_products=Order.objects.filter(created_at =current_time,customer=customer)
-    payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
-    print(f'curent_time..................{current_time}')
-    print(f'products:{order_products}')
-    total_amount =order_products.aggregate(total=Sum('total_amount'))
-    print(f'produts:{order_products}')
+   
+    if state == 'payemnt_failed':
+       order_products = get_object_or_404(Order,id=order_id) 
+       payment=get_object_or_404(Payment,payment_id=order_products.Payment.payment_id) 
+       total_amount=order_products.total_amount
+       order=order_products
+    else:
+      order = get_object_or_404(Order,id=order_id)
+      current_time=order.created_at
+      order_products=Order.objects.filter(created_at =current_time,customer=customer)
+      payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
+      total_amount =order_products.aggregate(total=Sum('total_amount'))
     status='rasorpay'
     context={
         'order_products' : order_products,
