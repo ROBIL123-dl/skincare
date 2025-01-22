@@ -94,7 +94,7 @@
                     {% endif %}
                     <h6>Order Created time: <small>{{ order.created_at }}</small></h6>
                 </div>
-                <div class="table-container">
+                <!-- <div class="table-container">
                     <div class="row mb-3 table-header py-2 d-none d-md-flex">
                         <div class="col-md-3">Product</div>
                         <div class="col-md-1">Quantity</div>
@@ -103,19 +103,19 @@
                         <div class="col-md-2">Coupon Offer</div>
                         <div class="col-md-1">Price</div>
                         <div class="col-md-1 text-end">Total</div>
-                    </div>
+                    </div> -->
                     {% for product in order_products %}
                     <div class="row mb-3 py-2 border-bottom align-items-center">
                         <div class="col-md-3 mb-2 mb-md-0">
                             <div class="product-name">{{ product.product.product_name }}</div>
                             <div class="product-details d-md-none">Qty: {{ product.quantity }} x {{ product.product.price }}</div>
                         </div>
-                        <div class="col-md-1 d-none d-md-block">{{ product.quantity }}</div>
-                        <div class="col-md-2 d-none d-md-block">{{ product.product_offer }}</div>
-                        <div class="col-md-2 d-none d-md-block">{{ product.cat_offer }}</div>
-                        <div class="col-md-2 d-none d-md-block">{{ product.coupon_price }}</div>
-                        <div class="col-md-1 d-none d-md-block">{{ product.product.price }}-Rs/</div>
-                        <div class="col-md-1 text-end">{{ product.total_amount }}-Rs/</div>
+                        <div class="col-md-1 ">Product Quantity:{{ product.quantity }}</div><br>
+                        <div class="col-md-2 ">Product Offer:{{ product.product_offer }}Rs/</div><br>
+                        <div class="col-md-2" >Product Offer:{{ product.cat_offer }}Rs/</div><br>
+                        <div class="col-md-2">Category Offer:{{ product.coupon_price }}Rs/</div><br>
+                        <div class="col-md-1">Price:{{ product.product.price }}-Rs/</div><br>
+                        <div class="col-md-1">Total:{{ product.total_amount }}-Rs/</div>
                     </div>
                     {% endfor %}
                     <div class="row total-row py-2">
