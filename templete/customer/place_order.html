@@ -58,7 +58,7 @@
     </div> 
 
     <div class="mt-4 btn-container">
-      <a href="{% url 'customer:invoice' order.id %}" class="btn btn-outline-secondary">
+      <a href="{% url 'customer:invoice' order.id  state %}" class="btn btn-outline-secondary">
             <i class="fas fa-print me-2"></i>Invoice
         </a>
         <a href="{% url 'customer:shop' 0 %}" class="btn btn-confirm">

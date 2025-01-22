@@ -904,7 +904,8 @@ def rasorpay_order_status(request,order_id,state):
         'status':status,
         'order':order,
         'payment':payment,
-        'order_id':order_id
+        'order_id':order_id,
+        'state':state
         }
     return render(request,'customer/place_order.html',context)
  
@@ -1047,16 +1048,19 @@ def wishlist(request,product):
 #invoice pdf
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='c_login')
-def invoice_pdf_view(request,order_id):
+def invoice_pdf_view(request,order_id,state):
     user = get_object_or_404(User,id=request.user.id)
     customer=get_object_or_404(Customer_profile,customer_id=user)
     order = get_object_or_404(Order,id=order_id)
-    current_time=order.created_at
-    order_products=Order.objects.filter(created_at =current_time,customer=customer)
-    total_amount =order_products.aggregate(total=Sum('total_amount'))
-    print(f'order_product:{order_products}')
-    payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
-    print(f'payment:{payment}')
+    if state == 'payment_failed':
+     order_products=Order.objects.filter(id=order.id) 
+     total_amount =order_products.aggregate(total=Sum('total_amount'))
+     payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id)  
+    else:
+      current_time=order.created_at
+      order_products=Order.objects.filter(created_at =current_time,customer=customer)
+      total_amount =order_products.aggregate(total=Sum('total_amount'))
+      payment=get_object_or_404(Payment,payment_id=order.Payment.payment_id)
     # Render the HTML template with context
     context = {'order_products': order_products,'payment':payment,'customer':customer,'order':order,'total_amount':total_amount}
     html_content = render_to_string('customer/invoice.html', context)
