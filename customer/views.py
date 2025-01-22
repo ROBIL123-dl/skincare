@@ -28,7 +28,7 @@ from django.http import JsonResponse
 import pytz
 from razorpay.errors import SignatureVerificationError
 from django.template.loader import render_to_string
-# from lushaura.settings import PDFKIT_CONFIG
+from lushaura.settings import PDFKIT_CONFIG
 import pdfkit
 from io import BytesIO
 
