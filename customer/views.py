@@ -547,7 +547,7 @@ def place_order(request,cart_id,status):
                     if order.total_amount <= 1000:
                         order.save()
                         payment=Payment(user=customer,transaction_id=0,
-                               amount=order.total_amount,status="done",
+                               amount=order.total_amount,status="no",
                                vendor=carts.product_id.seller_id,payment_category='cash_on_delivery'
                                )
                         payment.save()
@@ -568,7 +568,6 @@ def place_order(request,cart_id,status):
             elif status == 'all_products_checkout':#multiple products
                amount=0
                carts = Cart.objects.filter(customer_id=customer.id)
-               print(carts)
                if carts.exists():
                  count=carts.aggregate(count=Count('id'))
                  if coupon_price>0:
