@@ -27,7 +27,7 @@ urlpatterns = [
     path('wallet/',views.My_wallet,name='wallet'),
     path('return_product/<int:order_id>/', views.return_product, name='return'),
     path('wishlist/<int:product>/',views.wishlist,name='wishlist'),
-    # path('invoice/<int:order_id>/',views.invoice_pdf_view,name='invoice'),
+    path('invoice/<int:order_id>/',views.invoice_pdf_view,name='invoice'),
 
 ]
     
