@@ -22,7 +22,7 @@
     {% if orders %}
     {% for order in orders %}
     <div class="card mb-4 order-card">
-       <small style="margin-left:1em; color:#567253">ordered:-{{ order.created_at|date:"Y-m" }}</small>
+       <small style="margin-left:1em; color:#567253">ordered:-{{ order.created_at|date:"F Y d" }}</small>
        <small style="margin-left:1em; color:#567253">Payment Method:-{{order.Payment.payment_category}}</small>
         <div class="card-body">
             <div class="row align-items-center">
