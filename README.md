@@ -87,7 +87,7 @@ project_root/
 - Python 3.x
 - PostgreSQL
 - Django (latest version)
-- Virtual environment (optional but recommended)
+- Virtual environment 
 
 ### Steps to Run
 1. Clone the repository:
