@@ -121,8 +121,6 @@ project_root/
 
 ---
 
-## Screenshots
-(Include screenshots or links to images showcasing the application features such as customer dashboard, vendor dashboard, and admin panel.)
 
 ---
 
